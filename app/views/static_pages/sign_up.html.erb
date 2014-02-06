@@ -1,21 +1,6 @@
 <% provide( :title, 'Sign Up') %>
 <div class="row vertical-offset-100">
   
-  <div style="display:none;">
-  	<a href="#fb_waiting" class="fancybox">Open Example</a>
-  <div id="fb_waiting" class="row vertical-offset-100">
-    	<div class="col-md-4 col-md-offset-4">
-    		<div class="panel panel-default">
-			  	<div class="panel-heading">
-			    	<h3 class="panel-title">Scenes Near Me</h3>
-			 	</div>
-			  	<div class="panel-body">
-			  			User Sign Up
-			  	</div>
-			 </div>
-		</div>
-</div>
-</div>
  <div class="row vertical-offset-100">
     	<div class="col-md-4 col-md-offset-4">
     		<div class="panel panel-default">
@@ -211,7 +196,17 @@ Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmap
 
                 
  });
-
+   
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+     
 
 $('#password').passStrengthify({
       minimum: 5,
