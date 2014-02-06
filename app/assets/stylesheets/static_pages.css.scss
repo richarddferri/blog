@@ -1,0 +1,55 @@
+// Place all the styles related to the StaticPages controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+#register {
+	margin-left:100px;	
+}
+#register label{
+	margin-right:5px;
+}
+#register input {
+	padding:5px 7px;
+	border:1px solid #d5d9da;
+	box-shadow: 0 0 5px #e8e9eb inset;
+	width:250px;
+	font-size:1em;
+	outline:0;
+}
+
+#result{
+	margin-left:5px;
+}
+#register {
+	margin-left:100px;	
+}
+#register label{
+	margin-right:5px;
+}
+#register input {
+	padding:5px 7px;
+	border:1px solid #d5d9da;
+	box-shadow: 0 0 5px #e8e9eb inset;
+	width:250px;
+	font-size:1em;
+	outline:0;
+}
+
+#result{
+	margin-left:5px;
+}
+
+#register .short{
+	color:#FF0000;
+}
+
+#register .weak{
+	color:#E66C2C;
+}
+
+#register .good{
+	color:#2D98F3;
+}
+
+#register .strong{
+	color:#006400;
+}

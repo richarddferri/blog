@@ -1,0 +1,71 @@
+  <div style="height:500px; width:500px;">
+       
+  <!--  <form>
+      <input id="geocomplete" type="text" placeholder="Type in an address" size="90" />
+      <input id="find" type="button" value="find" />
+    </form>
+     -->
+       <div id="map-canvas"/>
+
+  </div>
+    <script>
+$(document).ready(function()
+{       
+    Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
+var currentUser = Parse.User.current();
+
+  var map;
+
+function initialize() {
+  var mapOptions = {
+    zoom: 6
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    var location = currentUser.get("location");
+    var defaultLatitude = location["latitude"];
+    var defaultLongitude = location["longitude"];
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = new google.maps.LatLng(defaultLatitude,
+                                       defaultLongitude);
+
+      var infowindow = new google.maps.InfoWindow({
+        map: map,
+        position: pos,
+        content: currentUser.get("first_name")+" "+currentUser.get("last_name")+" default location."
+      });
+
+      map.setCenter(pos);
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleNoGeolocation(false);
+  }
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Error: The Geolocation service failed.';
+  } else {
+    var content = 'Error: Your browser doesn\'t support geolocation.';
+  }
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(60, 105),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+});
+    </script>

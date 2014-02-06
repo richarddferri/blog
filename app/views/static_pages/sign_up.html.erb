@@ -1,0 +1,282 @@
+<% provide( :title, 'Sign Up') %>
+<div class="row vertical-offset-100">
+  
+  <div style="display:none;">
+  	<a href="#fb_waiting" class="fancybox">Open Example</a>
+  <div id="fb_waiting" class="row vertical-offset-100">
+    	<div class="col-md-4 col-md-offset-4">
+    		<div class="panel panel-default">
+			  	<div class="panel-heading">
+			    	<h3 class="panel-title">Scenes Near Me</h3>
+			 	</div>
+			  	<div class="panel-body">
+			  			User Sign Up
+			  	</div>
+			 </div>
+		</div>
+</div>
+</div>
+ <div class="row vertical-offset-100">
+    	<div class="col-md-4 col-md-offset-4">
+    		<div class="panel panel-default">
+			  	<div class="panel-heading">
+			    	<h3 class="panel-title">Sign Up for Scenes Near Me!</h3>
+			 	</div>
+			  	<div class="panel-body">
+			    	<form accept-charset="UTF-8" role="form" id="signup_form">
+			    			 
+                    <fieldset>
+                    	<div class="form-group" id="errors2"></div>
+			    	  	<div class="form-group">
+			    		    <input id="email" class="form-control" placeholder="E-mail / User Name" name="email" type="text">
+			    		</div>
+			    		<div id="pwd-container" class="form-group">
+			    			<input id="password" class="form-control" placeholder="Password" name="password" type="password" value="">
+			    		</div>
+			    		<div class="form-group">
+			    			<input id="confirm_password" class="form-control" placeholder="Confirm Password" name="password" type="password" value="">
+			    		</div>
+			    		<div class="form-group">
+			    		    <input id="firstName" class="form-control" placeholder="First Name" name="firstName" type="text">
+			    		</div>
+			    		<div class="form-group">
+			    		    <input id="lastName" class="form-control" placeholder="Last Name" name="lastName" type="text">
+			    		</div> 
+			    		<div class="form-group">
+			    		    <input class="form-control" placeholder="Type Address" name="geoaddress" type="text" length="90" id="geocomplete">
+			    		    <input id="lat" class="form-control" type="text" name="lat"  style="display:none;" />
+			    		    <input id="lng" class="form-control" type="text" name="lng"  style="display:none;" />
+			    		</div>
+			    		 
+			    		<div class="checkbox">
+			    	    	<label>
+			    	    		<input id="remember" name="remember" type="checkbox" value="Remember Me"> Remember Me
+			    	    	</label>
+			    	    </div>
+			    		<input id="submit" class="btn btn-lg btn-primary btn-block" type="submit" value="Create Account">
+			    		   <div class="panel-footer text-center">
+						                   
+						                    <a href="#facebook"><span class="fa fa-facebook fa-2x" style="#333333"></span></a>
+						                    <a href="#twitter"><span class="fa fa-twitter fa-2x"></span></a>
+						                   </a>
+						    </div>
+
+			    	</fieldset>
+			      	</form>
+			      	<div id="map-canvas"></div>
+			    </div>
+			    	 
+			</div>
+		</div>
+	</div>
+
+
+ <script type="text/javascript">
+   	
+/*
+	jQuery document ready.
+*/
+$(document).ready(function()
+{
+Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
+ $("#submit").click(function(e){
+
+
+   $("#signup_form").validate({
+                    onkeyup: false,
+                    onfocusout: false,
+                    errorElement: "div",
+                    errorPlacement: function(error, element) {
+                        error.appendTo("div#errors2");
+                    }, 
+                    rules: {
+                        "email" : {
+                            required : true
+                            
+                        },
+                         "password" : {
+                            required : true,
+                            equalTo: "#confirm_password" 
+                        },
+                        "confirm_password" : {
+                            required : true,
+                            equalTo: "#password"
+                        },
+                        "firstName" : {
+                            required : true 
+                        },
+                        "lastName" : {
+                            required : true 
+                        },
+                        "geoaddress" : {
+                            required : true 
+                        }
+                    },
+                    messages: {
+
+						"email" : {
+                            required : "A valid email address is required."
+                            
+                        },
+                         "password" : {
+                            required : "Please enter a password." ,
+                            equalTo: "Passwords do not match."
+
+                        },
+                        "confirm_password" : {
+                            required : "Please confirm your password.",
+                            equalTo: "Passwords do not match."
+                        },
+                        "firstName" : {
+                            required : "First Name is required." 
+                        },
+                        "lastName" : {
+                            required : "Last Name is required." 
+                        },
+                        "geoaddress" : {
+                            required : "Default Loation to start at is required." 
+                        }
+                    },
+                    submitHandler: function(){
+   
+                    	var user=new Parse.User();
+                    	// user.set("username", $("#email"))
+                     
+						user.set("username", $("#email").val());
+						user.set("password", $("#password").val());
+						user.set("email", $("#email").val());
+						user.set("first_name", $("#firstName").val());
+						user.set("last_name", $("#lastName").val());
+						user.set("default_location", $("#geocomplete").val());
+						user.set("default_lat", $("#lat").val());
+						user.set("default_lng", $("#lng").val());
+						var location = new Parse.GeoPoint({latitude: parseFloat($("#lat").val()), longitude: parseFloat($("#lng").val())});
+						user.set("location" , location);
+				  $.fancybox({helpers : {
+					        overlay : {
+					            css : {
+					                'background' : 'rgba(58, 42, 45, 0.95)'
+					            }
+					        }
+					    },
+					    closeBtn: false,
+					 	content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Signing up user '+$("#email").val()+'</div></div>'});
+
+				 
+
+					 
+						user.signUp(null, {
+						  success: function(user) {
+						    
+	
+   				// 		$.fancybox({helpers : {
+					  //       overlay : {
+					  //           css : {
+					  //               'background' : 'rgba(58, 42, 45, 0.95)'
+					  //           }
+					  //       }
+					  //   },
+					  //   closeBtn: true,
+					 	// content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Congratulations '+$('#firstName').val()+' '+$('#lastName').val()+'!  You have successfully signed up for Scenes Near Me!</div></div>'});
+
+						   
+								$(location).attr('href','/user_home');
+
+
+
+
+
+						  },
+						  error: function(user, error) {
+						    // Show the error message somewhere and let the user try again.
+						    // alert("Error: " + error.code + " " + error.message);
+						    $.fancybox({helpers : {
+					        overlay : {
+					            css : {
+					                'background' : 'rgba(58, 42, 45, 0.95)'
+					            }
+					        }
+					    },
+					    closeBtn: true,
+					 	content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Signing up user '+error.code + " " + error.message+'</div></div>'});
+
+						  }
+						}); 
+						e.preventDefault();
+                    }
+                });
+                $.validator.addMethod("customFunction", function(value) {
+                    return value == "input";
+                }, 'Please enter "input"!'); 
+
+                
+ });
+
+
+$('#password').passStrengthify({
+      minimum: 5,
+      labels: {
+        tooShort: 'Too short custom text',
+        passwordStrength: 'Password strength custom text'
+    }});
+  
+
+  var options = {
+          map: "#map-canvas",
+          location: "NYC",
+          mapOptions: {
+		    zoom: 10
+		  },
+		  markerOptions: {
+		    draggable: true
+		  }
+
+        };
+		   
+        $("#geocomplete").geocomplete(options).bind("geocode:result", function(event, result){
+            // console.log("Result: " + result.lat+","+result.lng+","+result.country_short+","result.formatted_address);
+            // console.log("Result: "  + result.formatted_address);
+            $('#lat').val(result['geometry']['location'].lat() );
+            $('#lng').val(result['geometry']['location'].lng());
+            // console.log("Result: "+result['geometry']['location'].lat()+","+result['geometry']['location'].lng());
+            // console.log(result);
+            // console.log("completed.");
+          })
+          .bind("geocode:error", function(event, status){
+            // console.log("ERROR: " + status);
+          })
+          .bind("geocode:multiple", function(event, results){
+            // console.log("Multiple: " + results.length + " results found");
+          });
+
+            // Get the map and set a new zoom level.
+	 
+        
+
+
+ 
+	 $('#state').bfhstates({country:'US', state: 'NY' , blank: false});	
+   	$('#country').bfhcountries({country:'US', state:'NY', blank:false});
+    $('#country').change(function(){
+    	console.log("updating bfh-states");
+    	var _country = "";
+    	 $('#country option:selected').each(function(){
+    			_country=$(this).attr('value');
+    	});
+
+    	console.log("COUNTRY IS "+_country);
+ 			$('#state').bfhstates();	
+    })	;
+
+    });
+    </script>
+<!-- <div class="center hero-unit">
+
+<h1>Welcome to Scenes Near Me</h1>
+<p>
+		Sign Up
+
+</p>
+<%= link_to "Sign Up now!", '#', class: "btn btn-large btn-primary" %>
+
+</div> -->

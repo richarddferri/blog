@@ -1,0 +1,49 @@
+
+<header class="navbar navbar-default">
+	 
+			<div class="navbar-inner">
+				<div class="container">
+					<h2>Scenes Near Me</h2>
+				  <nav>
+							 <ul class="nav navbar-nav pull-left">
+								<li><Welcome to Scenes Near Me <span id="users_name"></span></li>
+								  
+							</ul> 
+					</nav>  
+					<nav>  
+						<ul class="nav nav-pills pull-right">
+							<li><%= link_to "Home", home_path %></li>
+							<li><%= link_to "Help", help_path %></li>
+							<li id="signin"><%= link_to "Sign In", sign_in_path %></li>
+							<li id="signout" style="display:none;"> <%= link_to "Sign Out", "#" , id: "signoutlink"  %></li>
+
+						</ul>
+					</nav>
+
+				</div>
+			</div> 
+ 
+	</header>
+	 <script>
+$(document).ready(function()
+{       
+Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
+var currentUser = Parse.User.current();
+if (currentUser) {
+	console.log(currentUser.get("first_name")+" " +currentUser.get("last_name"));
+    $('#users_name').val("Welcome "+currentUser.get("first_name")+" " +currentUser.get("last_name"));
+    $('#users_name').text("Welcome "+currentUser.get("first_name")+" " +currentUser.get("last_name"));
+    $('#signin').hide();
+    $('#signout').show();
+} else {
+     $('#signin').show();
+    $('#signout').hide();
+}
+         $('#signoutlink').click(function(){
+         		Parse.User.logOut();
+				$(location).attr('href','/sign_in');
+         }) ;	
+       
+  
+      });
+    </script>

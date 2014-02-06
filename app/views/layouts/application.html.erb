@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	  <title> <%= full_title( yield(:title)) %></title>
+	  <%= stylesheet_link_tag    "application", media: "all" %>
+	  <%= javascript_include_tag "application" %>
+	  <%= csrf_meta_tags %>
+	  <%=  render "/layouts/shim" %>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+
+    <script src="http://www.parsecdn.com/js/parse-1.2.16.min.js"></script>
+       <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuRuUa9_24-NpgaogK_43cz8o3fj4MTbI&sensor=true"></script>
+ 
+ 
+
+	</head>
+<body>
+		<%= render "/layouts/header" %>
+	 
+	<div class="container">
+		<%= yield() %>
+	</div>
+	
+ 
+	<%= render "/layouts/footer" %>
+</body>
+</html>
