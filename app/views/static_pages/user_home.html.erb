@@ -1,7 +1,7 @@
   <div style="height:400px; width:500px;">
        
      <div class="row vertical-offset-100" style="width:100%;">
-      <div class="col-md-12">
+      <div class="col-md-14">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title">Specify a location</h3>
@@ -84,6 +84,46 @@ function handleNoGeolocation(errorFlag) {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+
+
+  var options = {
+          map: "#map-canvas",
+          // location: "NYC",
+          mapOptions: {
+               zoom: 6
+            },
+            markerOptions: {
+              draggable: true
+            } 
+        };
+       
+        $("#geocomplete").geocomplete(options).bind("geocode:result", function(event, result){
+ 
+                    var myLatlng = new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
+                    var mapOptions = {
+                      zoom: 6,
+                      center: myLatlng
+                    }
+                    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+                    var marker = new google.maps.Marker({
+                        position: myLatlng,
+                        title: result.formatted_address
+                    });
+
+                    // To add the marker to the map, call setMap();
+                    marker.setMap(map); 
+          })
+          .bind("geocode:error", function(event, status){
+            // console.log("ERROR: " + status);
+          })
+          .bind("geocode:multiple", function(event, results){
+            // console.log("Multiple: " + results.length + " results found");
+          });
+
 
 });
     </script>

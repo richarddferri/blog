@@ -11,6 +11,12 @@
 </div>
 <script>
 $(document).ready(function(){
+	Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
+	var currentUser = Parse.User.current();
+	if(currentUser)
+	{
+		$(location).attr('href','/user_home');
+	}
 	$('#sign_up_button').click(function(){
 			$(location).attr('href','/sign_up');
 	})	;
