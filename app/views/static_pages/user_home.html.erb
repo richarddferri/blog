@@ -128,7 +128,7 @@ Parse.Cloud.run('findClosest', {  }, {
     for(var i = 0; i < scenes.length ; i++)
     {
         var scene = scenes[i];
-        alert("Scene "+scene['show_name']+" "+scene['show_type']);
+        alert("Scene "+scene[i]['show_name']+" "+scene[i]['show_type']);
     }
   },
   error: function(error) {
