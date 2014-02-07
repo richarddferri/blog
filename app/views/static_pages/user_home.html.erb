@@ -123,18 +123,18 @@ google.maps.event.addDomListener(window, 'load', initialize);
           .bind("geocode:multiple", function(event, results){
             // console.log("Multiple: " + results.length + " results found");
           });
-// Parse.Cloud.run('findClosest', {  }, {
-//   success: function(scenes) {
-//     for(var i = 0; i < scenes.length ; i++)
-//     {
-//         var scene = scenes[i];
-//         alert("Scene "+scene['show_name']+" "+scene['show_type']);
-//     }
-//   },
-//   error: function(error) {
-//     alert("Error "+error.message);
-//   }
-// });
+Parse.Cloud.run('findClosest', {  }, {
+  success: function(scenes) {
+    for(var i = 0; i < scenes.length ; i++)
+    {
+        var scene = scenes[i];
+        alert("Scene "+scene['show_name']+" "+scene['show_type']);
+    }
+  },
+  error: function(error) {
+    alert("Error "+error.message);
+  }
+});
 
 });
     </script>
