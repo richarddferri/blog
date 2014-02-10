@@ -18,7 +18,7 @@ group :development, :test do
 	 gem 'childprocess'
 	gem 'rspec'
 end
-gem 'ember-rails' , github: 'emberjs/ember-rails'
+# gem 'ember-rails' , github: 'emberjs/ember-rails'
 gem 'activerecord'
 gem 'fancybox-rails'
 gem 'fancybox2-rails'
