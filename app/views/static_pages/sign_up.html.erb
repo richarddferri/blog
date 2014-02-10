@@ -229,13 +229,10 @@ $('#password').passStrengthify({
         };
 		   
         $("#geocomplete").geocomplete(options).bind("geocode:result", function(event, result){
-            // console.log("Result: " + result.lat+","+result.lng+","+result.country_short+","result.formatted_address);
-            // console.log("Result: "  + result.formatted_address);
+ 
             $('#lat').val(result['geometry']['location'].lat() );
             $('#lng').val(result['geometry']['location'].lng());
-            // console.log("Result: "+result['geometry']['location'].lat()+","+result['geometry']['location'].lng());
-            // console.log(result);
-            // console.log("completed.");
+ 
           })
           .bind("geocode:error", function(event, status){
             // console.log("ERROR: " + status);

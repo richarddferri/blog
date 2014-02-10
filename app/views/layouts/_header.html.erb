@@ -12,7 +12,8 @@
 					</nav>  
 					<nav>  
 						<ul class="nav nav-pills pull-right">
-							<li><%= link_to "Home", home_path %></li>
+							<li id='home_signedout'><%= link_to "Home", home_path %></li>
+							<li id='home_signedin' style='display: none;'><%= link_to "Home", user_home_path %></li>
 							<li><%= link_to "Help", help_path %></li>
 							<li id="signin"><%= link_to "Sign In", sign_in_path %></li>
 							<li id="signout" style="display:none;"> <%= link_to "Sign Out", "#" , id: "signoutlink"  %></li>
@@ -30,16 +31,19 @@ $(document).ready(function()
 Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
 var currentUser = Parse.User.current();
 if (currentUser) {
-	console.log(currentUser.get("first_name")+" " +currentUser.get("last_name"));
     $('#users_name').val("Welcome "+currentUser.get("first_name")+" " +currentUser.get("last_name"));
     $('#users_name').text("Welcome "+currentUser.get("first_name")+" " +currentUser.get("last_name"));
     $('#signin').hide();
     $('#signout').show();
+    $('#home_signedin').show();
+    $('#home_signedout').hide();
 } else {
      $('#signin').show();
     $('#signout').hide();
+      $('#home_signedin').hide();
+    $('#home_signedout').show();
 }
-         $('#signoutlink').click(function(){
+         $('#signoutlink').on('click',function(){
          		Parse.User.logOut();
 				$(location).attr('href','/sign_in');
          }) ;	

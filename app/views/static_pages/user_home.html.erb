@@ -1,4 +1,4 @@
-  <div style="height:400px; width:500px;">
+  <div style="height:400px; width:100%;">
        
      <div class="row vertical-offset-100" style="width:100%;">
       <div class="col-md-14">
@@ -13,15 +13,24 @@
                 <div class="form-group" id="errors2"></div>
                 <div class="form-group">
                   <input id="geocomplete" class="form-control" placeholder="Specify a location." name="geocomplete" type="text">
-                </div> 
+                </div>
+                <div class="form-group">
+                  <ul class="nav  nav-pills"  id="location-nav">
+                    <li class="active"><a class='map-nav' id='1' href="#">Default Location</a></li>
+                  </ul>
+                </div>
+
               </fieldset>
             </form>
           </div>
+          <div style="height:350px; width:100%;" class="panel-footer">
+                  <div id="map-canvas"/>
+          </div> 
         </div>
       </div>
     </div>
+<div style="display:none;"><%=image_tag("current-location.png", alt: "Current Location", class: "current-location" , id: "current-location-img")%></div>
 
-<div id="map-canvas"/>
 
 
 
@@ -32,90 +41,176 @@ $(document).ready(function()
     Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
 var currentUser = Parse.User.current();
 
-  var map;
-
-function initialize() {
-  var mapOptions = {
-    zoom: 6
-  };
-  map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
-
-  // Try HTML5 geolocation
-  if(navigator.geolocation) {
-    var location = currentUser.get("location");
-    var defaultLatitude = location["latitude"];
-    var defaultLongitude = location["longitude"];
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = new google.maps.LatLng(defaultLatitude,
-                                       defaultLongitude);
-
-      var infowindow = new google.maps.InfoWindow({
-        map: map,
-        position: pos,
-        content: currentUser.get("first_name")+" "+currentUser.get("last_name")+" default location."
-      });
-
-      map.setCenter(pos);
-    }, function() {
-      handleNoGeolocation(true);
-    });
-  } else {
-    // Browser doesn't support Geolocation
-    handleNoGeolocation(false);
-  }
-}
-
-function handleNoGeolocation(errorFlag) {
-  if (errorFlag) {
-    var content = 'Error: The Geolocation service failed.';
-  } else {
-    var content = 'Error: Your browser doesn\'t support geolocation.';
-  }
-
-  var options = {
-    map: map,
-    position: new google.maps.LatLng(60, 105),
-    content: content
-  };
-
-  var infowindow = new google.maps.InfoWindow(options);
-  map.setCenter(options.position);
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);
 
 
-
-
-
-  var options = {
-          map: "#map-canvas",
-          // location: "NYC",
-          mapOptions: {
-               zoom: 6
-            },
-            markerOptions: {
-              draggable: true
-            } 
-        };
-       
-        $("#geocomplete").geocomplete(options).bind("geocode:result", function(event, result){
  
+   var point_= Backbone.Model.extend({
+          defaults:{
+            latitude: 0.0,longitude:0.0, title:'', imdb_id: ''
+          },
+          toLatLng: function()
+          {
+            return new google.maps.LatLng( parseFloat(this.get('latitude')),parseFloat(this.get('longitude')) );
+          }
+      });
+ 
+      var list_ = Backbone.Collection.extend({
+        model: point_
+      });
+ 
+var UserLocation = Backbone.Model.extend({
+  defaults:{
+    user: Parse.User.current(),
+    defaultLocation: new point_().set({
+     latitude: Parse.User.current().get("location")['latitude'],
+     longitude: Parse.User.current().get("location")['longitude']
+    }),
+    selectedLocation: null
+  }
+}); 
+ 
+var UserLocationView = Backbone.View.extend({
+  el: $('body'),
+  initialize: function(){
+   
+    _.bindAll(this,'render' ,'renderScenes', 'renderMap');
+    this.userLocation = new UserLocation();
+    this.centerDefault = this.userLocation.get('defaultLocation').toLatLng(),
+    this.mapOptions = { zoom: 12 , center: this.centerDefault };
+    this.map = new google.maps.Map(document.getElementById('map-canvas'), this.mapOptions);
+
+    this.defaultString = ' Default location for '+this.userLocation.get("user").get("first_name")+' '+this.userLocation.get("user").get("last_name");
+    this.bounds = new google.maps.LatLngBounds();
+    this.pointList = new list_();
+    this.tabCounter=1;
+    this.tabIndex = new Object();
+    this.tabIndex[1]=this.userLocation.get('defaultLocation');
+    this.render('default' ,this.defaultString ,null);
+    
+
+  }, 
+  recenter: function(idx){
+    if(idx>0)
+    { 
+      var point = this.tabIndex[idx];
+      if(point)
+      {
+        this.map.setCenter(point.toLatLng());
+      }
+    } 
+  },
+  renderMap: function(scenes){
+    
+      _(this.pointList.models).each(function(p){ // in case collection is not empty
+ 
+                          var infowindow = new google.maps.InfoWindow({
+                                content: '<div><a href="http://www.imdb.com/title/'+p.get('imdb_id')+'/" target="_blank">'+p.get('title')+'</a></div>'
+                           });
+
+                           var marker = new google.maps.Marker({
+                                                animation: google.maps.Animation.DROP,
+                                                map: this.map,
+                                                position: p.toLatLng(), 
+                                                title: p.get('title')});
+                            google.maps.event.addListener(marker, 'click', function() {
+                              infowindow.open(this.map,marker);
+                            });
+ 
+      }, this);
+  },
+  renderScenes: function(scenes){
+        if(this.map)
+        { 
+                          for(var i = 0; i < scenes.length ; i++)
+                          { 
+                            console.log(scenes[i].get('show').get('imdb_id') +' for '+ scenes[i].get('show_name')+" "+scenes[i].get('show_type'));
+                                        var position_ = new point_().set({
+                                          latitude: scenes[i].get('latitude'), 
+                                          longitude: scenes[i].get('longitude'),
+                                          title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
+                                          imdb_id: scenes[i].get('show').get('imdb_id')
+                                        }); 
+                                        this.pointList.add(position_); 
+                              
+                          } 
+                          this.renderMap();
+        }
+         
+  }, 
+  events: {
+            "click .map-nav": "recenter"
+  },
+  render: function(type, selected_string, chosen){
+ 
+     var loc = this.centerDefault ;
+     var str = this.defaultString;
+     if(type==='chosen')
+     {
+        loc=chosen;
+        str=selected_string;
+        ++this.tabCounter;
+        this.tabIndex[this.tabCounter]=new point_().set({
+          lat: loc.lat(),
+          lng: loc.lng(), 
+          title: selected_string
+        });
+         var $newElement = $('<li class="active"><a class="map-nav" lat='+loc.lat()+'   lng='+loc.lng()+' id="'+this.tabCounter+'" href="#">'+selected_string+'</a></li>');
+          var callbackOnClick = (function(map,lat,lng) { return function() { 
+          var center_=new point_().set({
+            latitude: lat,
+            longitude: lng
+          });
+           map.setCenter(center_.toLatLng()); 
+        } })(this.map,loc.lat(),loc.lng());
+        $newElement.on('click', callbackOnClick);
+        $('#location-nav').append($newElement); 
+     }
+
+       var iw = new google.maps.InfoWindow({
+                                content: '<div>'+str+'</div>'
+      });
+   
+     var m = new google.maps.Marker({
+                                        animation: google.maps.Animation.DROP,
+                                        map: this.map,
+                                        position: loc, 
+                                        zIndex: 1000,
+                                        icon:  $('#current-location-img').attr('src')  ,
+                                        title: str});
+                              google.maps.event.addListener(m, 'click', function() {
+                                                    iw.open(this.map,m);
+                                                  });
+     var promise =  new Parse.Promise();
+      promise.done(this.renderScenes);
+
+      var data = 
+      {
+          lat: loc.lat(),
+          lng: loc.lng()
+      };
+
+      Parse.Cloud.run('findClosest', data , {
+                        success: function(scenes) {
+                          promise.resolve(scenes);
+                          return promise;
+                        },
+                        error: function(error) {
+                          promise.reject(error);
+                        }
+                      });  
+      this.map.setCenter(loc);
+  } 
+
+});
+var userLocationView = new UserLocationView();
+
+       $("#geocomplete").geocomplete(userLocationView['mapOptions']).bind("geocode:result", function(event, result){
+ 
+                  var currentUser = Parse.User.current(); 
                     var myLatlng = new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
-                    var mapOptions = {
-                      zoom: 6,
-                      center: myLatlng
-                    }
-                    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+                    userLocationView.render('chosen' , result['formatted_address'], myLatlng);
 
-                    var marker = new google.maps.Marker({
-                        position: myLatlng,
-                        title: result.formatted_address
-                    });
-
-                    // To add the marker to the map, call setMap();
-                    marker.setMap(map); 
+                     
           })
           .bind("geocode:error", function(event, status){
             // console.log("ERROR: " + status);
@@ -123,18 +218,11 @@ google.maps.event.addDomListener(window, 'load', initialize);
           .bind("geocode:multiple", function(event, results){
             // console.log("Multiple: " + results.length + " results found");
           });
-Parse.Cloud.run('findClosest', {  }, {
-  success: function(scenes) {
-    for(var i = 0; i < scenes.length ; i++)
-    {
-        var scene = scenes[i];
-        alert("Scene "+scene[i]['show_name']+" "+scene[i]['show_type']);
-    }
-  },
-  error: function(error) {
-    alert("Error "+error.message);
-  }
-});
+
+
+$('a.map-nav').on('click',function(e){ 
+     userLocationView.recenter(parseInt($(this).attr('id')));
+  });
 
 });
     </script>
