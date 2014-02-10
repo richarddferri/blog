@@ -69779,10 +69779,6 @@ var methods = {};
 }(jQuery, methods));
 }(jQuery));
 (function() {
-  Blog.Router.map(function() {});
-
-}).call(this);
-(function() {
 
 
 }).call(this);
