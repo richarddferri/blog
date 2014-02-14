@@ -18,6 +18,10 @@
                 <div class="form-group">
                   <input id="show" class="form-control" placeholder="Specify a Show" name="show" type="text">
                 </div>
+                <div class="form-group">
+                  <input id="quotes" class="form-control" placeholder="Quotes - comma separated" name="quotes" type="text"> 
+                </div>
+                 
                  <div class="form-group" style="display:none;">
                   <input id="address" type="hidden"><input id="lat" type="hidden"><input id="lng" type="hidden">
                   <input id="country" type="hidden">
@@ -396,6 +400,13 @@ var userLocationView = new UserLocationView();
                     __type: "Pointer"
                   
      };
+     var quotes_string = $('#quotes').val() ;
+     var quotes_;
+     if(quotes_string)
+     {
+        quotes_= quotes_string.split(',');
+     }
+     // alert(quotes_string);
      var data_= {
              latitude: $('#lat').text() ,
              longitude: $('#lng').text() ,
@@ -413,7 +424,8 @@ var userLocationView = new UserLocationView();
               end_hour:  $('#end_hour').attr('aria-valuenow') ,
               end_minute: $('#end_minute').attr('aria-valuenow') ,
               end_second: $('#end_second').attr('aria-valuenow') ,
-               show: show_pointer
+               show: show_pointer,
+               quotes: quotes_
      }; 
       var replacer = function(key,val)
             {
@@ -434,7 +446,7 @@ var userLocationView = new UserLocationView();
                 }
                 return val;
             };
-    
+              // alert(JSON.stringify(data_,replacer));
              $.ajax({
             type: 'POST',
             dataType: 'json',
