@@ -36,12 +36,7 @@
                 </div>
                  <div class="form-group text-center">
                   <div id="save" class="btn btn-large btn-primary">Save</div>
-                </div>
-                <div class="form-group">
-                  <ul class="nav  nav-pills"  id="location-nav">
-                    <!-- <li class="active"><a class='map-nav' id='1' href="#">Default Location</a></li> -->
-                  </ul>
-                </div>
+                </div> 
 
               </fieldset>
             </form>
@@ -439,7 +434,7 @@ var userLocationView = new UserLocationView();
                 }
                 return val;
             };
-     alert("about to make ajax call");
+    
              $.ajax({
             type: 'POST',
             dataType: 'json',
@@ -450,8 +445,12 @@ var userLocationView = new UserLocationView();
             url: "https://api.parse.com/1/classes/SNMScene",
 
             data: JSON.stringify(data_,replacer),
-            contentType: "application/json"
-        }); 
+            contentType: "application/json",
+            success: function(msg){
+                alert('Successfully added scene '+msg['show_name'] + ' ' + msg['show_type'] );
+            }
+          }
+        ); 
  });
 
 });
