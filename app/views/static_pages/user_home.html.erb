@@ -129,11 +129,13 @@ var LocationTabs = Backbone.Collection.extend({
             });
             if(tab)
             {
-              console.log("TAB FOUND "+tab);
-              console.log(tab);
+              // console.log("TAB FOUND "+tab);
+              // console.log(tab);
               return tab;
             }
-            else{console.log('no tab found');}
+            else{
+              // console.log('no tab found');
+            }
     } 
 }
 });
@@ -175,8 +177,8 @@ var UserLocationView = Backbone.View.extend({
        var init=  navigator.geolocation.getCurrentPosition(function (position) {
              initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
              MAP.setCenter(initialLocation);
-             console.log('initial location ');
-             console.log(initialLocation);
+             // console.log('initial location ');
+             // console.log(initialLocation);
               var marker = new google.maps.Marker({
                                                 animation: google.maps.Animation.DROP,
                                                 map: MAP,
@@ -199,8 +201,8 @@ var UserLocationView = Backbone.View.extend({
            $('li[id^=li_]').removeClass('active');
            $('#li_'+idx).addClass('active');
            CURRENT_TAB=idx;
-           console.log('idx for new tab is '+idx);
-           console.log('CURRENT_TAB is '+ CURRENT_TAB);
+           // console.log('idx for new tab is '+idx);
+           // console.log('CURRENT_TAB is '+ CURRENT_TAB);
         } })(MAP,initialLocation.lat(),initialLocation.lng(),1,this.countMap);
 
         $newElement.on('click', callbackOnClick);
@@ -221,7 +223,7 @@ var UserLocationView = Backbone.View.extend({
  
           var callbackFindCloses = (function(scenes){
             return function(){
-                  console.log('scenes callback ');
+                  // console.log('scenes callback ');
             }
           })();
           // for(var i = 0; i < scenes.length ; i++)
@@ -292,8 +294,8 @@ var UserLocationView = Backbone.View.extend({
                                                           infowindow.open(MAP,marker);
                                                         });
                                                         marker.setMap( MAP );
-                                                      console.log('active count == '+ newTab.get('active_count'));
-                                                    console.log('t_id == '+ newTab.get('t_id'));
+                                                      // console.log('active count == '+ newTab.get('active_count'));
+                                                    // console.log('t_id == '+ newTab.get('t_id'));
                                                         // this.pointList.add(point);
                                         }
                                   
@@ -360,8 +362,8 @@ var UserLocationView = Backbone.View.extend({
                               infowindow.open(MAP,marker);
                             });
                             marker.setMap( MAP );
-                          console.log('active count == '+ new_tab.get('active_count'));
-                        console.log('t_id == '+ new_tab.get('t_id'));
+                          // console.log('active count == '+ new_tab.get('active_count'));
+                        // console.log('t_id == '+ new_tab.get('t_id'));
                             // this.pointList.add(point);
             }
       
@@ -458,8 +460,8 @@ TAB_SIZES[CURRENT_TAB]=page_count;
            $('li[id^=li_]').removeClass('active');
            $('#li_'+idx).addClass('active');
            CURRENT_TAB=idx;
-           console.log('idx for new tab is '+idx);
-           console.log('CURRENT_TAB is '+ CURRENT_TAB);
+           // console.log('idx for new tab is '+idx);
+           // console.log('CURRENT_TAB is '+ CURRENT_TAB);
         } })(MAP,loc.lat(),loc.lng(),this.tabCounter,this.countMap);
 
         $newElement.on('click', callbackOnClick);

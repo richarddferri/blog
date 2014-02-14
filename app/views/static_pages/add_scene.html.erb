@@ -131,7 +131,7 @@ var LocationTabs = Backbone.Collection.extend({
             if(tab)
             {
               // console.log("TAB FOUND "+tab);
-              console.log(tab);
+              // console.log(tab);
               return tab;
             }
             else{
@@ -354,13 +354,13 @@ var userLocationView = new UserLocationView();
           });
           $( "#show" ).autocomplete({
                 source: function( request, response ) {
-                      console.log(request);
+                      // console.log(request);
                       var data = 
                       {
                           query: request['term']
                       };
                           Parse.Cloud.run('findMovieByName', data ).then(function(movies){ 
-                            console.log(movies);
+                            // console.log(movies);
                              response( $.map( movies, function( movie ) {
                                       return {
                                           label: ' Movie: ' + movie.get('title')+', Release Date: '+movie.get('release_date')+' ',
@@ -373,7 +373,7 @@ var userLocationView = new UserLocationView();
                 },
                 minLength: 3,
             select: function( event, ui ) {
-              console.log(ui);
+              // console.log(ui);
               $('#show_name').text(ui['item']['value']);
               $('#show_id').text(ui['item']['id']);
               $('#show_type').text(ui['item']['show_type']);
