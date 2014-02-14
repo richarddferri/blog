@@ -4,13 +4,23 @@
       <div class="col-md-14">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Specify a location</h3>
+            <h3 class="panel-title">Specify a location</h3> 
           </div>
           <div class="panel-body">
             <form accept-charset="UTF-8" role="form" id="geolocation">
                  
                 <fieldset>
                 <div class="form-group" id="errors2"></div>
+                <div class="form-group text-center">
+                    <span id="current_number"></span> of <span id="total_number"></span>
+              <div class="slider slider-horizontal" style="width: 100%;">
+                  <div class="slider-track">
+                      <!-- <div class="slider-selection" style="left: 0%; width: 100%;"></div> -->
+                      <div class="slider-handle round hide" style="left: 0%;"></div>
+                    </div>
+                    <!-- <div class="tooltip top" style="top: -40px; left: 23px;"> </div> -->
+               </div>
+                </div>
                 <div class="form-group">
                   <input id="geocomplete" class="form-control" placeholder="Specify a location." name="geocomplete" type="text">
                 </div>
@@ -39,11 +49,25 @@
 $(document).ready(function()
 {       
     Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
+    var MAP;
+    var CURRENT_TAB=1;
+    var DEFAULT_PAGE_SIZE=20;
+
+var INIT_L;
+function initCurrentDefault()
+{ 
+     if (navigator.geolocation) {
+       var init=  navigator.geolocation.getCurrentPosition(function (position) {
+             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+             INIT_L=initialLocation;  
+         });
+     }
+}
+initCurrentDefault();
+
+
 var currentUser = Parse.User.current();
 
-
-
- 
    var point_= Backbone.Model.extend({
           defaults:{
             latitude: 0.0,longitude:0.0, title:'', imdb_id: ''
@@ -58,37 +82,257 @@ var currentUser = Parse.User.current();
         model: point_
       });
  
+  var GEOCODER =new google.maps.Geocoder();
+
 var UserLocation = Backbone.Model.extend({
   defaults:{
     user: Parse.User.current(),
     defaultLocation: new point_().set({
-     latitude: Parse.User.current().get("location")['latitude'],
-     longitude: Parse.User.current().get("location")['longitude']
+     latitude: (INIT_L)?INIT_L.lat():Parse.User.current().get("location")['latitude'],
+     longitude: (INIT_L)?INIT_L.lng():Parse.User.current().get("location")['longitude']
     }),
     selectedLocation: null
-  }
+  },
+  initialize: function(){} 
 }); 
- 
+
+var LocationTab = Backbone.Model.extend({
+  defaults:{
+    t_id: 0,
+    max: 100,
+    counter: 1,
+    tabName: '*',
+    map: null,
+    active_count: DEFAULT_PAGE_SIZE,
+    center_point: null,
+    pointList: new list_()
+  },
+  initialize: function(){},
+  add: function(newPoint){
+    this.get('pointList').add(newPoint); 
+  }, setMax: function(m){
+    this.set('max',m);
+  },
+  center: function(){
+    MAP.setCenter(center_point);
+  }
+});
+var LocationTabs = Backbone.Collection.extend({
+   model: LocationTab ,
+   find: function(tid){
+    for( var i =0 ; i < 10 ; i++)
+    {
+          var tab = _.filter( this.models, function(model){
+            return (
+                model.get('t_id') == tid
+            );
+            });
+            if(tab)
+            {
+              console.log("TAB FOUND "+tab);
+              console.log(tab);
+              return tab;
+            }
+            else{console.log('no tab found');}
+    } 
+}
+});
+  var TABS = new LocationTabs();
+  var TAB_SIZES = {}
 var UserLocationView = Backbone.View.extend({
   el: $('body'),
   initialize: function(){
    
-    _.bindAll(this,'render' ,'renderScenes', 'renderMap');
-    this.userLocation = new UserLocation();
-    this.centerDefault = this.userLocation.get('defaultLocation').toLatLng(),
-    this.mapOptions = { zoom: 12 , center: this.centerDefault };
-    this.map = new google.maps.Map(document.getElementById('map-canvas'), this.mapOptions);
+    _.bindAll(this,'render' ,'renderScenes', 'renderMap','reverseGeoCode','recenter','currentLocation');
 
-    this.defaultString = ' Default Location'  ;
-    this.bounds = new google.maps.LatLngBounds();
     this.pointList = new list_();
+
+     
     this.tabCounter=1;
     this.tabIndex = new Object();
+    this.PAGE_SIZE=20;
+    this.pointListMap={};
+
+
+
+    this.userLocation = new UserLocation();
+    this.centerDefault =  this.userLocation.get('defaultLocation').toLatLng();
+    this.currentLocation();
+    this.mapOptions = { zoom: 12 , center: this.centerDefault };
+    MAP = new google.maps.Map(document.getElementById('map-canvas'), this.mapOptions);
+    this.geocoder=new google.maps.Geocoder();
+    this.reverseGeoCode(this.centerDefault);
+    this.bounds = new google.maps.LatLngBounds();
+
+
     this.tabIndex[1]=this.userLocation.get('defaultLocation');
     this.render('default' ,this.defaultString ,null);
-    
+    this.countMap={};
+  
 
-  }, 
+  },   currentLocation: function(){
+     if (navigator.geolocation) {
+       var init=  navigator.geolocation.getCurrentPosition(function (position) {
+             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+             MAP.setCenter(initialLocation);
+             console.log('initial location ');
+             console.log(initialLocation);
+              var marker = new google.maps.Marker({
+                                                animation: google.maps.Animation.DROP,
+                                                map: MAP,
+                                                position:initialLocation, 
+                                                zIndex: 1000,
+                                                icon:  $('#current-location-img').attr('src')  ,
+                                                title: 'Current Location' });
+             
+ 
+              $('#1').remove();
+              $('#li_1').remove();
+
+    var $newElement = $('<li class="active" id="li_1"><a class="map-nav" lat='+initialLocation.lat()+'   lng='+initialLocation.lng()+' id="1" href="#">Current Location</a></li>');
+          var callbackOnClick = (function(map,lat,lng,idx,count_map) { return function() { 
+          var center_=new point_().set({
+            latitude: lat,
+            longitude: lng
+          });
+           map.setCenter(center_.toLatLng()); 
+           $('li[id^=li_]').removeClass('active');
+           $('#li_'+idx).addClass('active');
+           CURRENT_TAB=idx;
+           console.log('idx for new tab is '+idx);
+           console.log('CURRENT_TAB is '+ CURRENT_TAB);
+        } })(MAP,initialLocation.lat(),initialLocation.lng(),1,this.countMap);
+
+        $newElement.on('click', callbackOnClick);
+        $('#location-nav').append($newElement); 
+           $('li[id^=li_]').removeClass('active');
+           $('#li_1').addClass('active');
+
+          GEOCODER.geocode({'latLng': initialLocation}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                  if (results[1]) {
+                   this.defaultString='*'+results[1].formatted_address;
+                   $('#1').text(this.defaultString);
+                  }
+                } else {
+                  alert("Geocoder failed due to: " + status);
+                }
+              });
+ 
+          var callbackFindCloses = (function(scenes){
+            return function(){
+                  console.log('scenes callback ');
+            }
+          })();
+          // for(var i = 0; i < scenes.length ; i++)
+          //                 { 
+          //                               var position_ = new point_().set({
+          //                                 latitude: scenes[i].get('latitude'), 
+          //                                 longitude: scenes[i].get('longitude'),
+          //                                 title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
+          //                                 imdb_id: scenes[i].get('show').get('imdb_id')
+          //                               }); 
+          //                               newTab.add(position_); 
+          //                               this.pointList.add(position_);
+                              
+          //                 } 
+          //                 newTab.set('active_count' , scenes.length); 
+          //                 newTab.set('t_id', this.tabCounter);
+          //                   $('.slider').slider({value: scenes.length});
+          //                   $('#current_number').text(scenes.length);
+          //                 this.renderMap(newTab);
+
+
+        var promise =  new Parse.Promise();
+      promise.done(callbackFindCloses);
+   
+      var data = 
+      {
+          lat: initialLocation.lat(),
+          lng: initialLocation.lng(),
+          radius: 100,
+          radius_type: 'miles',
+          page_size: 20
+      };
+
+      Parse.Cloud.run('findClosest', data ).then(function(scenes){ 
+                        var newTab  = new LocationTab();
+                          promise.resolve(scenes,newTab); 
+                         for(var i = 0; i < scenes.length ; i++)
+                          { 
+                                                                var position_ = new point_().set({
+                                                                  latitude: scenes[i].get('latitude'), 
+                                                                  longitude: scenes[i].get('longitude'),
+                                                                  title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
+                                                                  imdb_id: scenes[i].get('show').get('imdb_id')
+                                                                }); 
+                                                                newTab.add(position_);  
+                                                      
+                           } 
+                            newTab.set('active_count' , scenes.length); 
+                             newTab.set('t_id', this.tabCounter);
+                            $('.slider').slider({value: scenes.length});
+                            $('#current_number').text(scenes.length);
+                           
+
+
+                            var PointList=newTab.get('pointList');
+                                      PointList.each(function(point){
+                                        if(point && MAP){ 
+                                             var infowindow = new google.maps.InfoWindow({
+                                                            content: '<div><a href="http://www.imdb.com/title/'+point.get('imdb_id')+'/" target="_blank">'+point.get('title')+'</a></div>'
+                                                       });
+
+                                                       var marker = new google.maps.Marker({
+                                                                            animation: google.maps.Animation.DROP,
+                                                                            map: MAP,
+                                                                            position: point.toLatLng(), 
+                                                                            title: point.get('title')});
+                                                        google.maps.event.addListener(marker, 'click', function() {
+                                                          infowindow.open(MAP,marker);
+                                                        });
+                                                        marker.setMap( MAP );
+                                                      console.log('active count == '+ newTab.get('active_count'));
+                                                    console.log('t_id == '+ newTab.get('t_id'));
+                                                        // this.pointList.add(point);
+                                        }
+                                  
+                                    }); 
+     // TABS.add(new_tab);
+
+
+
+                          return promise;
+                          
+                      }).then(function(scenes){
+                        Parse.Cloud.run('findClosestCount', data).then( 
+                                function(count) {
+                                  TAB_SIZES[CURRENT_TAB]=count;
+                                  $('.slider').slider({max: count});
+                                  $('#total_number').text(count); 
+                                  }) ; 
+                      });  
+
+                        
+
+         });  
+  }
+  },
+  reverseGeoCode: function(latLng)
+  {
+   this.geocoder.geocode({'latLng': latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+         this.defaultString='*'+results[1].formatted_address;
+         $('#1').text(this.defaultString);
+        }
+      } else {
+        alert("Geocoder failed due to: " + status);
+      }
+    });
+
+
+  },
   recenter: function(idx){
     if(idx>0)
     { 
@@ -99,28 +343,38 @@ var UserLocationView = Backbone.View.extend({
       }
     } 
   },
-  renderMap: function(scenes){
-    
-      _(this.pointList.models).each(function(p){ // in case collection is not empty
- 
-                          var infowindow = new google.maps.InfoWindow({
-                                content: '<div><a href="http://www.imdb.com/title/'+p.get('imdb_id')+'/" target="_blank">'+p.get('title')+'</a></div>'
+  renderMap: function(new_tab){
+  var PointList=new_tab.get('pointList');
+          PointList.each(function(point){
+            if(point && MAP){ 
+                 var infowindow = new google.maps.InfoWindow({
+                                content: '<div><a href="http://www.imdb.com/title/'+point.get('imdb_id')+'/" target="_blank">'+point.get('title')+'</a></div>'
                            });
 
                            var marker = new google.maps.Marker({
                                                 animation: google.maps.Animation.DROP,
-                                                map: this.map,
-                                                position: p.toLatLng(), 
-                                                title: p.get('title')});
+                                                map: MAP,
+                                                position: point.toLatLng(), 
+                                                title: point.get('title')});
                             google.maps.event.addListener(marker, 'click', function() {
-                              infowindow.open(this.map,marker);
+                              infowindow.open(MAP,marker);
                             });
- 
-      }, this);
+                            marker.setMap( MAP );
+                          console.log('active count == '+ new_tab.get('active_count'));
+                        console.log('t_id == '+ new_tab.get('t_id'));
+                            // this.pointList.add(point);
+            }
+      
+        }); 
+     TABS.add(new_tab);
   },
-  renderScenes: function(scenes){
-        if(this.map)
+  renderScenes: function(scenes,newTab){
+   
+          
+         newTab.set('map', MAP );
+         if(MAP)
         { 
+  
                           for(var i = 0; i < scenes.length ; i++)
                           { 
                                         var position_ = new point_().set({
@@ -129,15 +383,23 @@ var UserLocationView = Backbone.View.extend({
                                           title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
                                           imdb_id: scenes[i].get('show').get('imdb_id')
                                         }); 
-                                        this.pointList.add(position_); 
+                                        newTab.add(position_); 
+                                        this.pointList.add(position_);
                               
                           } 
-                          this.renderMap();
+                          newTab.set('active_count' , scenes.length); 
+                          newTab.set('t_id', this.tabCounter);
+                            $('.slider').slider({value: scenes.length});
+                            $('#current_number').text(scenes.length);
+                          this.renderMap(newTab);
         }
+   
          
   }, 
-  events: {
-            "click .map-nav": "recenter"
+  renderPage: function(page_count, idx){
+TAB_SIZES[CURRENT_TAB]=page_count;
+    $('.slider').slider({max: page_count});
+    $('#total_number').text(page_count); 
   },
   render: function(type, selected_string, chosen){
  
@@ -155,54 +417,81 @@ var UserLocationView = Backbone.View.extend({
         });
  
      }
-        var $newElement = $('<li class="active"><a class="map-nav" lat='+loc.lat()+'   lng='+loc.lng()+' id="'+this.tabCounter+'" href="#">'+str+'</a></li>');
-          var callbackOnClick = (function(map,lat,lng) { return function() { 
+          var promise =  new Parse.Promise();
+      promise.done(this.renderScenes);
+      var promise_count = new Parse.Promise();
+      promise_count.done(this.renderPage);
+
+      var data = 
+      {
+          lat: loc.lat(),
+          lng: loc.lng(),
+          radius: 100,
+          radius_type: 'miles',
+          page_size: this.PAGE_SIZE
+      };
+
+      Parse.Cloud.run('findClosest', data ).then(function(scenes){ 
+                        var newTab  = new LocationTab();
+                          promise.resolve(scenes,newTab);
+                          return promise;
+                          
+                      }).then(function(scenes){
+                        Parse.Cloud.run('findClosestCount', data).then( 
+                                function(count) {
+                                  promise_count.resolve(count);
+                                    return count;
+                                  }) ; 
+                      });  
+          
+      MAP.setCenter(loc);
+
+
+        CURRENT_TAB=this.tabCounter;
+        var $newElement = $('<li class="active" id="li_'+this.tabCounter+'"><a class="map-nav" lat='+loc.lat()+'   lng='+loc.lng()+' id="'+this.tabCounter+'" href="#">'+str+'</a></li>');
+          var callbackOnClick = (function(map,lat,lng,idx,count_map) { return function() { 
           var center_=new point_().set({
             latitude: lat,
             longitude: lng
           });
            map.setCenter(center_.toLatLng()); 
-        } })(this.map,loc.lat(),loc.lng());
+           $('li[id^=li_]').removeClass('active');
+           $('#li_'+idx).addClass('active');
+           CURRENT_TAB=idx;
+           console.log('idx for new tab is '+idx);
+           console.log('CURRENT_TAB is '+ CURRENT_TAB);
+        } })(MAP,loc.lat(),loc.lng(),this.tabCounter,this.countMap);
+
         $newElement.on('click', callbackOnClick);
         $('#location-nav').append($newElement); 
+           $('li[id^=li_]').removeClass('active');
+           $('#li_'+this.tabCounter).addClass('active');
+           
        var iw = new google.maps.InfoWindow({
                                 content: '<div>'+str+'</div>'
         });
    
      var m = new google.maps.Marker({
                                         animation: google.maps.Animation.DROP,
-                                        map: this.map,
+                                        map: MAP,
                                         position: loc, 
                                         zIndex: 1000,
                                         icon:  $('#current-location-img').attr('src')  ,
                                         title: str});
                               google.maps.event.addListener(m, 'click', function() {
-                                                    iw.open(this.map,m);
+                                                    iw.open(MAP,m);
                                                   });
-     var promise =  new Parse.Promise();
-      promise.done(this.renderScenes);
 
-      var data = 
-      {
-          lat: loc.lat(),
-          lng: loc.lng()
-      };
-
-      Parse.Cloud.run('findClosest', data , {
-                        success: function(scenes) {
-                          promise.resolve(scenes);
-                          return promise;
-                        },
-                        error: function(error) {
-                          promise.reject(error);
-                        }
-                      });  
-      this.map.setCenter(loc);
   } 
 
 });
 var userLocationView = new UserLocationView();
-
+        $('.slider').slider({max:100});
+        $('.slider').on('slide',   function( event, ui ) {
+            $('#current_number').text(ui.value);
+            var tab = TABS.find(CURRENT_TAB);
+             
+        } );
        $("#geocomplete").geocomplete(userLocationView['mapOptions']).bind("geocode:result", function(event, result){
  
                   var currentUser = Parse.User.current(); 
@@ -217,11 +506,7 @@ var userLocationView = new UserLocationView();
           .bind("geocode:multiple", function(event, results){
             // console.log("Multiple: " + results.length + " results found");
           });
-
-
-// $('a.map-nav').on('click',function(e){ 
-//      userLocationView.recenter(parseInt($(this).attr('id')));
-//   });
+ 
 
 });
     </script>

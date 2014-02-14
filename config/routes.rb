@@ -9,6 +9,7 @@ Blog::Application.routes.draw do
   get '/sign_in' , to: 'static_pages#sign_in'
   get '/user_home' , to: 'static_pages#user_home'
   get '/signup' , to: 'welcome#signup'
+  get '/add_scene' , to: 'static_pages#add_scene'
   # get '/' , to: 'welcome/sign_up'
   # get "static_pages/home"
   # get "static_pages/help"

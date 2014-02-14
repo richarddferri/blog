@@ -14,4 +14,6 @@ class StaticPagesController < ApplicationController
   end
   def user_home
   end
+  def add_scene
+  end
 end

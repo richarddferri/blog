@@ -11,11 +11,11 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs 
+//= require jquery_ujs  
 //= require bootstrap
 //= require fancybox
 //= require turbolinks
-//= require bootstrap-formhelpers-min
+//= require bootstrap-formhelpers-min 
 //= require country_state_form
 //= gecoding
 //= jquery.passstrengthify

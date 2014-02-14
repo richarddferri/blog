@@ -49,6 +49,8 @@ GEM
     bcrypt-ruby (3.1.2)
     bootstrap-sass (3.0.3.0)
       sass (~> 3.2)
+    bootstrap-timepicker-rails (0.1.3)
+      railties (>= 3.0)
     bootstrap-will_paginate (0.0.10)
       will_paginate
     builder (3.1.4)
@@ -108,6 +110,8 @@ GEM
     jquery-turbolinks (2.0.1)
       railties (>= 3.1.0)
       turbolinks
+    jquery-ui-rails (4.1.1)
+      railties (>= 3.1.0)
     json (1.8.1)
     less (2.4.0)
       commonjs (~> 0.2.7)
@@ -235,6 +239,7 @@ DEPENDENCIES
   activerecord
   bcrypt-ruby (~> 3.1.2)
   bootstrap-sass
+  bootstrap-timepicker-rails
   bootstrap-will_paginate
   capybara!
   childprocess
@@ -250,6 +255,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   jquery-turbolinks
+  jquery-ui-rails
   less-rails
   pg
   rails (= 4.0.1)

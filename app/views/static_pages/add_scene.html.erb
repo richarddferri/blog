@@ -1,0 +1,458 @@
+  <div style="height:400px; width:100%;">
+       
+     <div class="row vertical-offset-100" style="width:100%;">
+      <div class="col-md-14">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Add Scene</h3> 
+          </div>
+          <div class="panel-body">
+            <form accept-charset="UTF-8" role="form" id="geolocation">
+                 
+                <fieldset>
+                <div class="form-group" id="errors2"></div>
+                
+                <div class="form-group">
+                  <input id="geocomplete" class="form-control" placeholder="Specify a location." name="geocomplete" type="text">
+                </div>
+                <div class="form-group">
+                  <input id="show" class="form-control" placeholder="Specify a Show" name="show" type="text">
+                </div>
+                 <div class="form-group" style="display:none;">
+                  <input id="address" type="hidden"><input id="lat" type="hidden"><input id="lng" type="hidden">
+                  <input id="country" type="hidden">
+                  <input id="zipcode" type="hidden">
+                  <input id="city" type="hidden">
+                  <input id="state" type="hidden">
+                  <input id="address_1" type="hidden">
+                  <input id="county" type="hidden">
+                  <input id="show_id" type="hidden">
+                  <input id="show_name" type="hidden">
+                  <input id="show_type" type="hidden">
+                </div>
+                 <div class="form-group text-center">
+                  <b>Start </b><input class='spinner'  size=4 id="start_hour" value="HH">:<input class='spinner' id="start_minute"  size=4 value="MM">:<input class='spinner'  size=4 id="start_second" value="SS">
+                   <b>End </b><input class='spinner'  size=4 id="end_hour" value="HH">:<input class='spinner' id="end_minute"  size=4 value="MM">:<input class='spinner'  size=4 id="end_second" value="SS">
+                </div>
+                 <div class="form-group text-center">
+                  <div id="save" class="btn btn-large btn-primary">Save</div>
+                </div>
+                <div class="form-group">
+                  <ul class="nav  nav-pills"  id="location-nav">
+                    <!-- <li class="active"><a class='map-nav' id='1' href="#">Default Location</a></li> -->
+                  </ul>
+                </div>
+
+              </fieldset>
+            </form>
+          </div>
+          <div style="height:250px; width:100%;" class="panel-footer">
+                  <div id="map-canvas"/>
+          </div> 
+        </div>
+      </div>
+    </div>
+<div style="display:none;"><%=image_tag("current-location.png", alt: "Current Location", class: "current-location" , id: "current-location-img")%></div>
+
+
+
+
+  </div>
+    <script>
+$(document).ready(function()
+{       
+    Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
+    var MAP;
+    var MARKER;
+    var CURRENT_TAB=1;
+    var DEFAULT_PAGE_SIZE=20;
+var currentUser = Parse.User.current();
+
+
+
+ 
+   var point_= Backbone.Model.extend({
+          defaults:{
+            latitude: 0.0,longitude:0.0, title:'', imdb_id: ''
+          },
+          toLatLng: function()
+          {
+            return new google.maps.LatLng( parseFloat(this.get('latitude')),parseFloat(this.get('longitude')) );
+          }
+      });
+ 
+      var list_ = Backbone.Collection.extend({
+        model: point_
+      });
+ 
+var UserLocation = Backbone.Model.extend({
+  defaults:{
+    user: Parse.User.current(),
+    defaultLocation: new point_().set({
+     latitude: Parse.User.current().get("location")['latitude'],
+     longitude: Parse.User.current().get("location")['longitude']
+    }),
+    selectedLocation: null
+  },
+  initialize: function(){} 
+}); 
+
+var LocationTab = Backbone.Model.extend({
+  defaults:{
+    t_id: 0,
+    max: 100,
+    counter: 1,
+    tabName: '*',
+    map: null,
+    active_count: DEFAULT_PAGE_SIZE,
+    center_point: null,
+    pointList: new list_()
+  },
+  initialize: function(){},
+  add: function(newPoint){
+    this.get('pointList').add(newPoint); 
+  }, setMax: function(m){
+    this.set('max',m);
+  },
+  center: function(){
+    MAP.setCenter(center_point);
+  }
+});
+var LocationTabs = Backbone.Collection.extend({
+   model: LocationTab ,
+   find: function(tid){
+    for( var i =0 ; i < 10 ; i++)
+    {
+          var tab = _.filter( this.models, function(model){
+            return (
+                model.get('t_id') == tid
+            );
+            });
+            if(tab)
+            {
+              // console.log("TAB FOUND "+tab);
+              console.log(tab);
+              return tab;
+            }
+            else{
+              // console.log('no tab found');
+            }
+    } 
+}
+});
+  var TABS = new LocationTabs();
+  var GEOCODER =new google.maps.Geocoder();
+  var TAB_SIZES = {}
+var UserLocationView = Backbone.View.extend({
+  el: $('body'),
+  initialize: function(){
+   
+    _.bindAll(this,'render' ,'renderScenes', 'renderMap','reverseGeoCode','recenter','currentLocation');
+
+    this.pointList = new list_();
+
+     
+    this.tabCounter=1;
+    this.tabIndex = new Object();
+    this.PAGE_SIZE=20;
+    this.pointListMap={};
+
+
+
+    this.userLocation = new UserLocation();
+    this.centerDefault = this.userLocation.get('defaultLocation').toLatLng(),
+    this.mapOptions = { zoom: 12 , center: this.centerDefault };
+    MAP = new google.maps.Map(document.getElementById('map-canvas'), this.mapOptions);
+    this.geocoder=new google.maps.Geocoder();
+    this.reverseGeoCode(this.centerDefault);
+    this.bounds = new google.maps.LatLngBounds();
+
+
+    this.tabIndex[1]=this.userLocation.get('defaultLocation');
+    this.render('default' ,this.defaultString ,null);
+    this.countMap={};
+    this.currentLocation();
+     },
+       currentLocation: function(){
+     if (navigator.geolocation) {
+         navigator.geolocation.getCurrentPosition(function (position) {
+             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+             MAP.setCenter(initialLocation);
+
+              var marker = new google.maps.Marker({
+                                                animation: google.maps.Animation.DROP,
+                                                map: MAP,
+                                                position:initialLocation, 
+                                                zIndex: 1000,
+                                                icon:  $('#current-location-img').attr('src')  ,
+                                                title: 'Current Location' });
+
+
+
+                            // google.maps.event.addListener(marker, 'click', function() {
+                            //   infowindow.open(MAP,marker);
+                            // });
+                            marker.setMap( MAP );
+                            GEOCODER.geocode({'latLng': initialLocation}, function(results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK) {
+
+                                      if (results[1]) {
+                                       $('#address').text(results[1].formatted_address);
+                                       $("#geocomplete").attr('placeholder',results[1].formatted_address);
+                                       $('#lat').text(initialLocation.lat());
+                                       $('#lng').text(initialLocation.lng());
+                                       var locality_to_address = {};
+                                        if(results[0].address_components)
+                                        {
+                                              var array_ = results[0].address_components;
+                                              // console.log(array_);
+                                              for(var i = 0 ; i < array_.length; i++)
+                                              {
+                                                // console.log(i+" -> "+array_.length);
+                                                // console.log(array_[i]);
+                                                for(var j = 0 ; j< array_[i]['types'].length; j++)
+                                                {
+                                                  // console.log(array_[i]['types'][j]+' == '+array_[i]['long_name']);
+                                                  locality_to_address[array_[i]['types'][j]]=array_[i]['long_name'];
+                                                }
+                                              }
+                                              // console.log(locality_to_address);
+                                              $('#county').text(locality_to_address['administrative_area_level_2']);
+                                              $('#city').text(locality_to_address['sublocality']);
+
+                                              $('#state').text(locality_to_address['administrative_area_level_1']);
+                                              $('#country').text(locality_to_address['country']);
+                                              $('#zipcode').text(locality_to_address['postal_code']);
+                                              $('#address_1').text(locality_to_address['street_number']+' '+locality_to_address['route']);
+                                        }
+                                         
+                                      }
+                                    } else {
+                                      alert("Geocoder failed due to: " + status);
+                                    }
+                                  });
+                            // MAP.setCenter(myLatlng);
+
+         });
+  }
+  },
+  reverseGeoCode: function(latLng)
+  {
+   this.geocoder.geocode({'latLng': latLng}, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        if (results[1]) {
+         this.defaultString='*'+results[1].formatted_address;
+         $('#1').text(this.defaultString);
+        }
+      } else {
+        alert("Geocoder failed due to: " + status);
+      }
+    });
+
+
+  },
+  recenter: function(idx){
+    if(idx>0)
+    { 
+      var point = this.tabIndex[idx];
+      if(point)
+      {
+        this.map.setCenter(point.toLatLng());
+      }
+    } 
+  },
+  renderMap: function(new_tab){
+  
+  },
+  renderScenes: function(scenes,newTab){
+           
+  }, 
+  renderPage: function(page_count, idx){
+   },
+  render: function(type, selected_string, chosen){}
+ 
+});
+var userLocationView = new UserLocationView();
+        $("#geocomplete").geocomplete(userLocationView['mapOptions']).bind("geocode:result", function(event, result){
+ 
+                  var currentUser = Parse.User.current(); 
+                    var myLatlng = new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
+                    // userLocationView.render('chosen' , result['formatted_address'], myLatlng);
+                    if(MARKER)
+                    {
+                      MARKER.setMap(null);
+                    }
+                  MARKER = new google.maps.Marker({
+                                                animation: google.maps.Animation.DROP,
+                                                map: MAP,
+                                                position:myLatlng, 
+                                                title: result['formatted_address'] });
+
+
+
+                            // google.maps.event.addListener(marker, 'click', function() {
+                            //   infowindow.open(MAP,marker);
+                            // });
+                            MARKER.setMap( MAP );
+                            MAP.setCenter(myLatlng);
+                            // console.log(result);
+
+
+                              GEOCODER.geocode({'latLng': myLatlng}, function(results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK) {
+                                      // console.log(results);
+                                      // console.log(results[0]);
+                                      if (results[1]) {
+                                       //  console.log(results[1]);
+                                       // this.defaultString='*'+results[1].formatted_address;
+                                       $('#address').text(results[1].formatted_address);
+                                       $('#lat').text(myLatlng.lat());
+                                       $('#lng').text(myLatlng.lng());
+                                       var locality_to_address = {};
+                                        if(results[0].address_components)
+                                        {
+                                              var array_ = results[0].address_components;
+                                              // console.log(array_);
+                                              for(var i = 0 ; i < array_.length; i++)
+                                              {
+                                                // console.log(i+" -> "+array_.length);
+                                                // console.log(array_[i]);
+                                                for(var j = 0 ; j< array_[i]['types'].length; j++)
+                                                {
+                                                  // console.log(array_[i]['types'][j]+' == '+array_[i]['long_name']);
+                                                  locality_to_address[array_[i]['types'][j]]=array_[i]['long_name'];
+                                                }
+                                              }
+                                              // console.log(locality_to_address);
+                                              $('#county').text(locality_to_address['administrative_area_level_2']);
+                                              $('#city').text(locality_to_address['sublocality']);
+
+                                              $('#state').text(locality_to_address['administrative_area_level_1']);
+                                              $('#country').text(locality_to_address['country']);
+                                              $('#zipcode').text(locality_to_address['postal_code']);
+                                              $('#address_1').text(locality_to_address['street_number']+' '+locality_to_address['route']);
+                                        }
+                                         
+                                      }
+                                    } else {
+                                      alert("Geocoder failed due to: " + status);
+                                    }
+                                  });
+
+
+                            // console.log(' city is '+ result['city']);
+                            //  console.log(' state is '+ result['state']);
+                            //     console.log(' country is '+ result['country']);
+                            //         console.log(' zipcode is '+ result['zipcode']);
+                     
+          })
+          .bind("geocode:error", function(event, status){
+            // console.log("ERROR: " + status);
+          })
+          .bind("geocode:multiple", function(event, results){
+            // console.log("Multiple: " + results.length + " results found");
+          });
+          $( "#show" ).autocomplete({
+                source: function( request, response ) {
+                      console.log(request);
+                      var data = 
+                      {
+                          query: request['term']
+                      };
+                          Parse.Cloud.run('findMovieByName', data ).then(function(movies){ 
+                            console.log(movies);
+                             response( $.map( movies, function( movie ) {
+                                      return {
+                                          label: ' Movie: ' + movie.get('title')+', Release Date: '+movie.get('release_date')+' ',
+                                          value: movie.get('title') ,
+                                          id: movie['id'],
+                                          show_type: 'Movie'
+                                      }
+                              }));
+                          });
+                },
+                minLength: 3,
+            select: function( event, ui ) {
+              console.log(ui);
+              $('#show_name').text(ui['item']['value']);
+              $('#show_id').text(ui['item']['id']);
+              $('#show_type').text(ui['item']['show_type']);
+             $('#show').attr('placeholder', ui['item']['value']);
+
+            },
+            open: function() {
+            $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+            $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            } 
+          });
+ $('.spinner').spinner({min: 0, max:1000});
+ $('#save').on('click', function(){
+      /*
+      Save the scene!
+      */
+    
+      
+     var show_pointer = {
+      
+                    className:'SNMMovie',
+                    objectId: $('#show_id').text(),
+                    __type: "Pointer"
+                  
+     };
+     var data_= {
+             latitude: $('#lat').text() ,
+             longitude: $('#lng').text() ,
+              show_name: $('#show_name').text() ,
+              show_type: $('#show_type').text() ,
+              country: $('#country').text() ,
+              zipcode: $('#zipcode').text() ,
+              city: $('#city').text() ,
+              state: $('#state').text()  ,
+              address_1: $('#address_1').text()  ,
+              county: $('#county').text() ,
+              start_hour: $('#start_hour').attr('aria-valuenow')  ,
+              start_minute:  $('#start_minute').attr('aria-valuenow')  ,
+              start_second: $('#start_second').attr('aria-valuenow') ,
+              end_hour:  $('#end_hour').attr('aria-valuenow') ,
+              end_minute: $('#end_minute').attr('aria-valuenow') ,
+              end_second: $('#end_second').attr('aria-valuenow') ,
+               show: show_pointer
+     }; 
+      var replacer = function(key,val)
+            {
+                if(key=='start_hour' || 
+                  key=='start_minute' || 
+                  key=='start_second' || 
+                  key=='end_hour' || 
+                  key=='end_minute' || 
+                  key=='end_second'  
+                 )
+                {
+                    return parseInt(val);
+                }
+                else if( key=='latitude' || 
+                  key=='longitude')
+                {
+                  return parseFloat(val);
+                }
+                return val;
+            };
+     alert("about to make ajax call");
+             $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            headers: {
+                  'X-Parse-Application-Id':  "qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4" ,
+                  'X-Parse-REST-API-Key' : "ojVHFgNLjMwT1KMngErKPkxNQFVuowv2qUXtvjih"
+            },
+            url: "https://api.parse.com/1/classes/SNMScene",
+
+            data: JSON.stringify(data_,replacer),
+            contentType: "application/json"
+        }); 
+ });
+
+});
+    </script>
