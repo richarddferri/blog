@@ -1,9 +1,179 @@
+
+    
+
   <div style="height:400px; width:100%;">
-       
+    <div class="modal fade es-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">    
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content"> 
+      <div class="modal-header">
+          <button class="close" data-dismiss="modal">×</button>
+          <h3 class="panel-title">Edit Scene</h3> 
+        </div>
+        <div class="modal-body" style="width: 100%; height: 600px;">  
+          <div class="panel-body">
+            <form accept-charset="UTF-8" role="form" id="geolocation">
+                 
+                <fieldset>
+                <div class="form-group" id="errors2"></div>
+                
+                <div class="form-group">
+                  <input id="autocomplete" class="form-control" placeholder="Specify a location." name="autocomplete" type="text">
+                </div>
+                <div class="form-group">
+                  <input id="show_modal" class="form-control" placeholder="Specify a Show" name="show" type="text">
+                </div>
+                <div class="form-group">
+                  <input   style="width:48%;float:left;" id="quotes_modal" class="form-control" placeholder="Quotes - comma separated" name="quotes" type="text"> <input  style="width:50%;float:right;"  id="description_modal" class="form-control" placeholder="Description" name="descrption" type="text"><br/>
+                </div> 
+                  <div class="form-group">&nbsp;</div>
+                 <div class="form-group" style="visibility: hidden;">
+                  <input id="address_modal" type="hidden"><input id="lat_modal" type="hidden"><input id="lng_modal" type="hidden">
+                  <input id="country_modal" type="hidden">
+                  <input id="zipcode_modal" type="hidden">
+                  <input id="city_modal" type="hidden">
+                  <input id="state_modal" type="hidden">
+                  <input id="address_1_modal" type="hidden">
+                  <input id="county_modal" type="hidden">
+                  <input id="show_id_modal" type="hidden">
+                  <input id="show_name_modal" type="hidden">
+                  <input id="show_type_modal" type="hidden">
+                  <input id="objectId_modal" type="hidden">
+                </div>
+                 <div class="form-group text-center">
+                 <span><div> <b>Start </b><input class='spinner'  size=4 id="start_hour_modal" value="HH">:<input class='spinner' id="start_minute_modal"  size=4 value="MM">:<input class='spinner'  size=4 id="start_second_modal" value="SS"></div>
+                  <br/>
+                  <div>
+                   <b>End </b><input class='spinner'  size=4 id="end_hour_modal" value="HH">:<input class='spinner' id="end_minute_modal"  size=4 value="MM">:<input class='spinner'  size=4 id="end_second_modal" value="SS"></span><span style="float:right;"></div></span>
+                </div>
+
+
+              </fieldset>
+            </form>
+          </div>
+           <div style="height:150px; width:100%;overflow:visible;"  >
+                  <div style="height:150px; width:100%;overflow:visible;" id="map-canvas-modal"/>
+          </div>    
+                   
+               
+         </div>
+        <div class="modal-footer">  
+          <button  id="update_modal" class="updateSceneYes btn btn-primary"  data-dismiss="modal">Update</button><button class="btn btn-primary" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
+
+
+
+ <div class="modal fade us-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content"> 
+           <div class="modal-header">
+                  <button class="close" data-dismiss="modal">×</button>
+                    <h3 class="panel-title">Confirmation</h3> 
+                </div>
+            <div class="modal-body">
+              
+                <h3 class="panel-title" id='panel_text_updated'>Scene Updated Successfully.</h3> 
+            </div>
+            <div class="modal-footer text-center">  
+               <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+
+        </div>
+      </div>
+  
+    </div> 
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content"> 
+           <div class="modal-header">
+                  <button class="close" data-dismiss="modal">×</button>
+                    <h3 class="panel-title">Confirmation</h3> 
+                </div>
+            <div class="modal-body">
+              
+                <h3 class="panel-title">Are you sure you want to delete this tab?</h3> 
+                
+            </div>
+
+            <div class="modal-footer text-center">  
+              <button data-id="" class="closeTabYes btn btn-primary"  data-dismiss="modal">Yes</button><button class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+
+        </div>
+      </div>
+  
+    </div> 
+    <div class="modal fade ds-success-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content"> 
+           <div class="modal-header">
+                  <button class="close" data-dismiss="modal">×</button>
+                    <h3 class="panel-title">Confirmation</h3> 
+                </div>
+            <div class="modal-body">
+              
+                <h3 class="panel-title">Scene deleted successfully</h3> 
+                
+            </div>
+
+            <div class="modal-footer text-center">  
+             <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+
+        </div>
+      </div>
+  
+    </div> 
+<div class="modal fade ds-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">    
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content"> 
+      <div class="modal-header">
+          <button class="close" data-dismiss="modal">×</button>
+          <h3 class="panel-title">Are you sure you want to delete this scene?</h3> 
+        </div>
+        <div class="modal-body" style="height: 500px;">  
+          <div class="pull-left">
+
+              <input type="hidden" id="objectId" text=""/>
+              <input type="hidden" id="tab_index" text=""/>
+              <!-- <div class="pull-left"> -->
+                <div><span id='show_type'></span>    <span id='show_name'></span>  -  <span id='releaseYear'></span>   </div> 
+                <div id='address_1'></div>
+                <div><span id='city'></span>, <span id='state'></span></div>
+          </div>
+          <div class="pull-right">
+             <img class="pull-right" src="" id="poster_id"/>
+          </div>
+              
+             
+                   
+               
+         </div>
+        <div class="modal-footer">  
+          <button data-id="" class="deleteSceneYes btn btn-primary"  data-dismiss="modal">Yes</button><button class="btn btn-primary" data-dismiss="modal">No</button>
+        </div>
+      </div>
+  </div>
+</div>
+
      <div class="row vertical-offset-100" style="width:100%;">
       <div class="col-md-14">
         <div class="panel panel-default">
+          <div class="tabbable tabs-left">
+                    <ul class="nav nav-tabs"  id="location-nav">
+                      
+                    </ul>
+                      <div class="tab-content">
+                    </div>
+           </div>
           <div class="panel-heading">
+
             <h3 class="panel-title">Specify a location</h3> 
           </div>
           <div class="panel-body">
@@ -11,24 +181,17 @@
                  
                 <fieldset>
                 <div class="form-group" id="errors2"></div>
-                <div class="form-group text-center">
-                    <span id="current_number"></span> of <span id="total_number"></span>
-              <div class="slider slider-horizontal" style="width: 100%;">
-                  <div class="slider-track">
-                      <!-- <div class="slider-selection" style="left: 0%; width: 100%;"></div> -->
-                      <div class="slider-handle round hide" style="left: 0%;"></div>
-                    </div>
-                    <!-- <div class="tooltip top" style="top: -40px; left: 23px;"> </div> -->
-               </div>
+
+                <div class="form-group">
+               
                 </div>
+                <div class="form-group text-center">
+                   <ul class="pager"><li> <span style='border:none;' id="current_number"></span> of <span style='border:none;' id="total_number"></span><span class='radius' style="display:none;"> - <span style='border:none;' class='settings'>Radius in miles</span> <input stclass='spinner'  size=4 id="radius" value="100"> </span></li><li id='next_li'><a id='next' href="#">Next</a></li></ul><input id='current_lat' type='hidden'/> <input id='current_lng' type='hidden'/> <input id='current_tab' type='hidden'/> 
+ 
                 <div class="form-group">
                   <input id="geocomplete" class="form-control" placeholder="Specify a location." name="geocomplete" type="text">
                 </div>
-                <div class="form-group">
-                  <ul class="nav  nav-pills"  id="location-nav">
-                    <!-- <li class="active"><a class='map-nav' id='1' href="#">Default Location</a></li> -->
-                  </ul>
-                </div>
+            
 
               </fieldset>
             </form>
@@ -43,472 +206,1024 @@
 
 
 
-
   </div>
     <script>
 $(document).ready(function()
-{       
+{  
+
+var logger = function(str)
+{
+     window.console && window.console.log(str);
+} 
     Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
     var MAP;
+    var MAP_MODAL;
+    var MARKER_MODAL;
     var CURRENT_TAB=1;
     var DEFAULT_PAGE_SIZE=20;
+    var CURRENT_USER  = Parse.User.current().fetch().then(function(user)
+                            {
 
-var INIT_L;
-function initCurrentDefault()
-{ 
-     if (navigator.geolocation) {
-       var init=  navigator.geolocation.getCurrentPosition(function (position) {
-             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-             INIT_L=initialLocation;  
-         });
-     }
-}
-initCurrentDefault();
+                                Parse.GeoPoint.current({
+                                                          success: function(point){
+                                                                                      logger('fetched point');
+                                                                                      logger(point);
+                                                                                      logger('fetched user');
+                                                                                      logger(user);
+                                                                                      logger('user fetch');
+                                                                                        user.set('location', point);
+                                                                                        var default_page_size = user.get('page_size');
+                                                                                        var default_radius = user.get('radius_miles');
+
+                                                                                        if(default_page_size)
+                                                                                        {
+                                                                                            DEFAULT_PAGE_SIZE=user.get('page_size');
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                          user.set('page_size', DEFAULT_PAGE_SIZE);
+                                                                                        }
+                                                                                        if(default_radius)
+                                                                                        {
+                                                                                          DEFAULT_RADIUS_MILES=default_radius;
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            user.set('radius_miles', DEFAULT_RADIUS_MILES);
+                                                                                        }
+                                                                                        logger(DEFAULT_RADIUS_MILES);
+                                                                                          $('#radius').val(DEFAULT_RADIUS_MILES);
+                                                                                            user.save();     
+                                                          }
+                                      }) ;   
 
 
-var currentUser = Parse.User.current();
+   
+                            });
+    var GEOCODER =new google.maps.Geocoder();
+    var DEFAULT_RADIUS_MILES= 100;
+    var TAB_SIZES = {};
+    function toLatLng(parseGeoPoint){
+     var google_latlng = null;
+      if(parseGeoPoint)
+      {
+        google_latlng=new google.maps.LatLng( parseGeoPoint['latitude'], parseGeoPoint['longitude']); 
+      }
+      return google_latlng;
+    }
+      var snm_scene = Parse.Object.extend("SNMScene");
 
-   var point_= Backbone.Model.extend({
-          defaults:{
-            latitude: 0.0,longitude:0.0, title:'', imdb_id: ''
-          },
-          toLatLng: function()
+      var scene_list = Parse.Collection.extend({
+        model: snm_scene
+      }); 
+
+      /*
+      *   UserLocation object
+      */
+      var UserLocation = Backbone.Model.extend({
+        defaults:{
+          user: CURRENT_USER ,
+          defaultLocation: Parse.GeoPoint.current ,
+          selectedLocation: null
+        },
+        initialize: function(){} 
+      }); 
+      /*
+      *   LocationTab object
+      */
+      var LocationTab = Parse.Object.extend("LocationTab");
+
+      /*
+      *   LocationTabs collection
+      */
+      var LocationTabs = Backbone.Collection.extend({
+         model: LocationTab ,
+         find: function(tid){
+          for( var i =0 ; i < 10 ; i++)
           {
-            return new google.maps.LatLng( parseFloat(this.get('latitude')),parseFloat(this.get('longitude')) );
-          }
+                var tab = _.filter( this.models, function(model){
+                  return (
+                      model.get('t_id') == tid
+                  );
+                  });
+                  if(tab)
+                  { 
+                    return tab;
+                  } 
+          } 
+      }
       });
- 
-      var list_ = Backbone.Collection.extend({
-        model: point_
-      });
- 
-  var GEOCODER =new google.maps.Geocoder();
+  
 
-var UserLocation = Backbone.Model.extend({
-  defaults:{
-    user: Parse.User.current(),
-    defaultLocation: new point_().set({
-     latitude: (INIT_L)?INIT_L.lat():Parse.User.current().get("location")['latitude'],
-     longitude: (INIT_L)?INIT_L.lng():Parse.User.current().get("location")['longitude']
-    }),
-    selectedLocation: null
-  },
-  initialize: function(){} 
-}); 
+      var TABS = new LocationTabs();
 
-var LocationTab = Backbone.Model.extend({
-  defaults:{
-    t_id: 0,
-    max: 100,
-    counter: 1,
-    tabName: '*',
-    map: null,
-    active_count: DEFAULT_PAGE_SIZE,
-    center_point: null,
-    pointList: new list_()
-  },
-  initialize: function(){},
-  add: function(newPoint){
-    this.get('pointList').add(newPoint); 
-  }, setMax: function(m){
-    this.set('max',m);
-  },
-  center: function(){
-    MAP.setCenter(center_point);
-  }
-});
-var LocationTabs = Backbone.Collection.extend({
-   model: LocationTab ,
-   find: function(tid){
-    for( var i =0 ; i < 10 ; i++)
-    {
-          var tab = _.filter( this.models, function(model){
-            return (
-                model.get('t_id') == tid
-            );
-            });
-            if(tab)
-            {
-              // console.log("TAB FOUND "+tab);
-              // console.log(tab);
-              return tab;
-            }
-            else{
-              // console.log('no tab found');
-            }
-    } 
-}
-});
-  var TABS = new LocationTabs();
-  var TAB_SIZES = {}
 var UserLocationView = Backbone.View.extend({
   el: $('body'),
   initialize: function(){
    
-    _.bindAll(this,'render' ,'renderScenes', 'renderMap','reverseGeoCode','recenter','currentLocation');
+    _.bindAll(this, 'renderScenes', 'renderNewTab','renderTab','renderCentralLocation','renderScene', 'findAndRenderScenes' );
 
-    this.pointList = new list_();
-
-     
-    this.tabCounter=1;
-    this.tabIndex = new Object();
-    this.PAGE_SIZE=20;
+    this.pointList = new scene_list();
+    this.PAGE_SIZE=DEFAULT_PAGE_SIZE;
     this.pointListMap={};
-
-
-
     this.userLocation = new UserLocation();
-    this.centerDefault =  this.userLocation.get('defaultLocation').toLatLng();
-    this.currentLocation();
-    this.mapOptions = { zoom: 12 , center: this.centerDefault };
+    this.mapOptions = { zoom: 12   };
     MAP = new google.maps.Map(document.getElementById('map-canvas'), this.mapOptions);
-    this.geocoder=new google.maps.Geocoder();
-    this.reverseGeoCode(this.centerDefault);
-    this.bounds = new google.maps.LatLngBounds();
 
+    var functionRenderCurrentLocation = function(current_location){
+           
+            if(current_location)
+                { 
 
-    this.tabIndex[1]=this.userLocation.get('defaultLocation');
-    this.render('default' ,this.defaultString ,null);
-    this.countMap={};
-  
-
-  },   currentLocation: function(){
-     if (navigator.geolocation) {
-       var init=  navigator.geolocation.getCurrentPosition(function (position) {
-             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-             MAP.setCenter(initialLocation);
-             // console.log('initial location ');
-             // console.log(initialLocation);
-              var marker = new google.maps.Marker({
-                                                animation: google.maps.Animation.DROP,
-                                                map: MAP,
-                                                position:initialLocation, 
-                                                zIndex: 1000,
-                                                icon:  $('#current-location-img').attr('src')  ,
-                                                title: 'Current Location' });
-             
- 
-              $('#1').remove();
-              $('#li_1').remove();
-
-    var $newElement = $('<li class="active" id="li_1"><a class="map-nav" lat='+initialLocation.lat()+'   lng='+initialLocation.lng()+' id="1" href="#">Current Location</a></li>');
-          var callbackOnClick = (function(map,lat,lng,idx,count_map) { return function() { 
-          var center_=new point_().set({
-            latitude: lat,
-            longitude: lng
-          });
-           map.setCenter(center_.toLatLng()); 
-           $('li[id^=li_]').removeClass('active');
-           $('#li_'+idx).addClass('active');
-           CURRENT_TAB=idx;
-           // console.log('idx for new tab is '+idx);
-           // console.log('CURRENT_TAB is '+ CURRENT_TAB);
-        } })(MAP,initialLocation.lat(),initialLocation.lng(),1,this.countMap);
-
-        $newElement.on('click', callbackOnClick);
-        $('#location-nav').append($newElement); 
-           $('li[id^=li_]').removeClass('active');
-           $('#li_1').addClass('active');
-
-          GEOCODER.geocode({'latLng': initialLocation}, function(results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                  if (results[1]) {
-                   this.defaultString='*'+results[1].formatted_address;
-                   $('#1').text(this.defaultString);
-                  }
-                } else {
-                  alert("Geocoder failed due to: " + status);
-                }
-              });
- 
-          var callbackFindCloses = (function(scenes){
-            return function(){
-                  // console.log('scenes callback ');
-            }
-          })();
-          // for(var i = 0; i < scenes.length ; i++)
-          //                 { 
-          //                               var position_ = new point_().set({
-          //                                 latitude: scenes[i].get('latitude'), 
-          //                                 longitude: scenes[i].get('longitude'),
-          //                                 title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
-          //                                 imdb_id: scenes[i].get('show').get('imdb_id')
-          //                               }); 
-          //                               newTab.add(position_); 
-          //                               this.pointList.add(position_);
-                              
-          //                 } 
-          //                 newTab.set('active_count' , scenes.length); 
-          //                 newTab.set('t_id', this.tabCounter);
-          //                   $('.slider').slider({value: scenes.length});
-          //                   $('#current_number').text(scenes.length);
-          //                 this.renderMap(newTab);
-
-
-        var promise =  new Parse.Promise();
-      promise.done(callbackFindCloses);
-   
-      var data = 
-      {
-          lat: initialLocation.lat(),
-          lng: initialLocation.lng(),
-          radius: 100,
-          radius_type: 'miles',
-          page_size: 20
-      };
-
-      Parse.Cloud.run('findClosest', data ).then(function(scenes){ 
-                        var newTab  = new LocationTab();
-                          promise.resolve(scenes,newTab); 
-                         for(var i = 0; i < scenes.length ; i++)
-                          { 
-                                                                var position_ = new point_().set({
-                                                                  latitude: scenes[i].get('latitude'), 
-                                                                  longitude: scenes[i].get('longitude'),
-                                                                  title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
-                                                                  imdb_id: scenes[i].get('show').get('imdb_id')
-                                                                }); 
-                                                                newTab.add(position_);  
-                                                      
-                           } 
-                            newTab.set('active_count' , scenes.length); 
-                             newTab.set('t_id', this.tabCounter);
-                            $('.slider').slider({value: scenes.length});
-                            $('#current_number').text(scenes.length);
-                           
-
-
-                            var PointList=newTab.get('pointList');
-                                      PointList.each(function(point){
-                                        if(point && MAP){ 
-                                             var infowindow = new google.maps.InfoWindow({
-                                                            content: '<div><a href="http://www.imdb.com/title/'+point.get('imdb_id')+'/" target="_blank">'+point.get('title')+'</a></div>'
-                                                       });
-
-                                                       var marker = new google.maps.Marker({
-                                                                            animation: google.maps.Animation.DROP,
-                                                                            map: MAP,
-                                                                            position: point.toLatLng(), 
-                                                                            title: point.get('title')});
-                                                        google.maps.event.addListener(marker, 'click', function() {
-                                                          infowindow.open(MAP,marker);
-                                                        });
-                                                        marker.setMap( MAP );
-                                                      // console.log('active count == '+ newTab.get('active_count'));
-                                                    // console.log('t_id == '+ newTab.get('t_id'));
-                                                        // this.pointList.add(point);
-                                        }
-                                  
-                                    }); 
-     // TABS.add(new_tab);
-
-
-
-                          return promise;
+                       
+                        point_latlng = new google.maps.LatLng( current_location['latitude'], current_location['longitude']); 
+                        MAP.setCenter(point_latlng);
+                       
+                         GEOCODER.geocode({'latLng': point_latlng}, function(results, status) {
+                              if (status == google.maps.GeocoderStatus.OK)
+                              {
+                                if (results[1]) 
+                                { 
+                                 tab_string =''+results[1].formatted_address;
+                                  if(CURRENT_TAB==1)
+                                  {
+                                      tab_string = '*'+tab_string;
+                                  }
+                                
+                                }
+                              }
+                             else 
+                              {
+                                alert("Geocoder failed due to: " + status);
+                              }
+                            }); 
+    
+                         var arr_ = [];
+                         arr_.push(tab_string);
+                           inner_callback.apply(current_location,arr_); 
                           
-                      }).then(function(scenes){
-                        Parse.Cloud.run('findClosestCount', data).then( 
-                                function(count) {
-                                  TAB_SIZES[CURRENT_TAB]=count;
-                                  $('.slider').slider({max: count});
-                                  $('#total_number').text(count); 
-                                  }) ; 
-                      });  
-
-                        
-
-         });  
-  }
-  },
-  reverseGeoCode: function(latLng)
-  {
-   this.geocoder.geocode({'latLng': latLng}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        if (results[1]) {
-         this.defaultString='*'+results[1].formatted_address;
-         $('#1').text(this.defaultString);
-        }
-      } else {
-        alert("Geocoder failed due to: " + status);
-      }
-    });
+                }   
 
 
-  },
-  recenter: function(idx){
-    if(idx>0)
+    } ;
+    var inner_callback =this.renderNewTab;
+    var point_latlng;
+    var tab_string='';
+    var outter_callback_function = function(current_location)
     { 
-      var point = this.tabIndex[idx];
-      if(point)
-      {
-        this.map.setCenter(point.toLatLng());
-      }
-    } 
+          var callback_function = (function(current_location,callback,tab_string,point_latlng,current_tab){
+                                      return function(){
+                                           if(current_location)
+                                            {
+                                              logger('callback_function');
+                                                    CURRENT_USER.set('location', current_location);
+                                                     CURRENT_USER.fetch().then(function(user)
+                                                                    {
+                                                                      logger(user);
+                                                                      logger('user fetch');
+                                                                      var default_page_size = user.get('page_size');
+                                                                      var default_radius = user.get('radius_miles');
+
+                                                                      if(default_page_size)
+                                                                      {
+                                                                          DEFAULT_PAGE_SIZE=user.get('page_size');
+                                                                      }
+                                                                      else
+                                                                      {
+                                                                        user.set('page_size', DEFAULT_PAGE_SIZE);
+                                                                      }
+                                                                      if(default_radius)
+                                                                      {
+                                                                        DEFAULT_RADIUS_MILES=default_radius;
+                                                                      }
+                                                                      else
+                                                                      {
+                                                                          user.set('radius_miles', DEFAULT_RADIUS_MILES);
+                                                                      }
+                                                                      logger(DEFAULT_RADIUS_MILES);
+                                                                        $('#radius').spinner({val: DEFAULT_RADIUS_MILES});
+                                                                          user.save(); 
+                                                                    });
+
+
+
+
+                                                    // //use current location
+                                                    // CURRENT_USER.save();       
+                                            }   
+                                      }
+                                  })(current_location,inner_callback,tab_string,point_latlng,CURRENT_TAB) ;
+    };
+ 
+    var promise =  new Parse.Promise();
+      promise.done(outter_callback_function);
+   
+    var promise_newtab =  new Parse.Promise();
+      promise_newtab.done(this.renderNewTab);
+     
+       Parse.GeoPoint.current({
+                            success: function(point){
+                                  promise.resolve(point);
+                                  var tab_string='*';
+                                 var   point_latlng = new google.maps.LatLng( point['latitude'], point['longitude']); 
+                                           GEOCODER.geocode({'latLng': point_latlng}, function(results, status) {
+                                                                                    if (status == google.maps.GeocoderStatus.OK)
+                                                                                    {
+                                                                                      if (results[1]) 
+                                                                                      { 
+                                                                                       tab_string =''+results[1].formatted_address;
+                                                                                        if(CURRENT_TAB==1)
+                                                                                        {
+                                                                                            tab_string = '*'+tab_string;
+                                                                                        }
+                                                                                      
+                                                                                      }
+                                                                                       promise_newtab.resolve(point,tab_string,CURRENT_TAB);
+                                                                                    }
+                                                                                   else 
+                                                                                    {
+                                                                                      alert("Geocoder failed due to: " + status);
+                                                                                    }
+                                                                                  }); 
+
+                                     
+
+                                  return promise;
+                            }
+        }) ;   
   },
-  renderMap: function(new_tab){
-  var PointList=new_tab.get('pointList');
-          PointList.each(function(point){
-            if(point && MAP){ 
-                 var infowindow = new google.maps.InfoWindow({
-                                content: '<div><a href="http://www.imdb.com/title/'+point.get('imdb_id')+'/" target="_blank">'+point.get('title')+'</a></div>'
+  renderScenes: function(scenes, current_tab_){ 
+       if(current_tab_)
+       {
+          current_tab_=parseInt(current_tab_);
+       }
+       else
+       {
+        logger('current_tab renderScenes is undefined');
+           current_tab_=1;
+       }
+        var listing = TAB_SIZES['listing.'+current_tab_];
+        var markers = TAB_SIZES['markers.'+current_tab_];
+        if(!listing)
+        {
+          logger('new listing');
+          listing = new scene_list();
+          markers = new Array();
+          TAB_SIZES['listing.'+current_tab_]=listing;
+          TAB_SIZES['markers.'+current_tab_]=markers;
+        }
+       logger('current_number is  (2) .1 '+current_tab_);
+         if(MAP)
+        { 
+                          var current_number = TAB_SIZES['current.'+current_tab_];
+                         
+                           if(!current_number)
+                           {
+                            current_number=0;
+                           }
+                          for(var i = 0; i < scenes.length ; i++)
+                          {   
+                              this.renderScene(scenes[i], (current_number+i), listing, markers , current_tab_);   
+                          } 
+                          logger(TAB_SIZES);
+                          logger(CURRENT_TAB);
+
+                          logger('current_number is  (2) .2 '+current_tab_);
+                           var total_number = TAB_SIZES[current_tab_];
+                         
+                           logger('current_number is  (2) .3 '+current_number);
+                            current_number = current_number + scenes.length;
+                            logger('current_number is  (2) .4 '+current_number);
+                            TAB_SIZES['current.'+current_tab_]=(current_number);
+                            logger(TAB_SIZES);
+                            logger(CURRENT_TAB);
+
+                            $('#current_number').text(current_number);   
+                            $('#total_number').text(total_number);
+                            if(current_tab_ && current_number &&  current_number >= total_number )
+                            {
+                              logger('add disabled 1');
+                               $('#next_li').addClass('disabled');
+                            }               
+        }
+   
+         
+  },
+ renderScene: function(scene, index, list_, markers_, current_tab)
+  { 
+                 
+       var callbackOnClick = (function(objectId) { return function() { 
+            logger('callback - ajax');
+            $.ajax({
+                            type: 'GET',
+                            dataType: 'json',
+                            async: false,
+                            headers: {
+                                  'X-Parse-Application-Id':  "qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4" ,
+                                  'X-Parse-REST-API-Key' : "ojVHFgNLjMwT1KMngErKPkxNQFVuowv2qUXtvjih"
+                            },
+                            url: "https://api.parse.com/1/classes/SNMScene/"+objectId,
+                            // data: JSON.stringify(data_,replacer),
+                            contentType: "application/json",
+                            success: function(scene_){
+                              logger(scene_);
+                                  logger('scene returned ************');
+                                  logger(scene_);
+                                  $('#show_id_modal').text(scene_['show']['objectId']);
+                                  $('#show_name_modal').text(scene_['show_name']);
+                                  $('#show_type_modal').text(scene_['show_type'] );
+                                  logger('edit -- get of scene refresh.');
+                                  logger('edit - start_hour=='+scene_['start_hour']  ); logger('edit - start_minute=='+scene_['start_minute'] ); logger('edit - start_second=='+scene_['start_second'] );  logger('edit - end_hour=='+scene_['end_hour']); logger('edit - end_minute=='+scene_['end_minute']    );  logger('edit - end_second=='+scene_['end_second']  );
+                                  $('#description_modal').attr('placeholder',scene_['description']  );
+                                   $('#description_modal').text(scene_['description']  );
+                                   $('#description_modal').val(scene_['description']  );
+                                   logger('description set to '+scene_['description'] );
+                                   $('#start_hour_modal').spinner('value',scene_['start_hour'] );   
+                                                                   $('#start_minute_modal').spinner('value',scene_['start_minute'] ); 
+                                                                   $('#start_second_modal').spinner('value',scene_['start_second'] ); 
+                                                                   $('#end_hour_modal').spinner('value',scene_['end_hour']  );  
+                                                                   $('#end_minute_modal').spinner('value',scene_['end_minute'] ); 
+                                                                   $('#end_second_modal').spinner('value',scene_['end_second'] );
+                                  logger('quotes '+scene_['quotes'] );                               
+                                  var quote_string ='';
+                                  if(scene_['quotes'] )  { quote_string=scene_['quotes'].toString();  }
+                                  $('#quotes_modal').attr('placeholder',quote_string);
+                                  $('#quotes_modal').val(quote_string);
+                                  $('#show_modal').attr('placeholder',scene_['show_name']  );
+                                  $('#lat_modal').text(parseFloat( scene_['latitude']));
+                                  $('#lng_modal').text(parseFloat(  scene_['longitude']));
+                                  $('#address_modal').text(scene_['address_1']+','+scene_['city']+','+scene_['state']+' '+ scene_['zipcode']);
+                                  $('#lat_modal').text(parseFloat( scene_['latitude'] ));
+                                  $('#lng_modal').text(parseFloat( scene_['longitude'] )); 
+                                  $('#county_modal').text(scene_['county']);
+                                  $('#city_modal').text(scene_['city']); 
+                                  $('#state_modal').text(scene_['state']);
+                                  $('#country_modal').text(scene_['country']);
+                                  $('#zipcode_modal').text(scene_['zipcode']);
+                                  $('#address_1_modal').text(scene_['address_1']);
+                                  $('#autocomplete').attr('placeholder', scene_['address_1']+','+scene_['city']+','+scene_['state']+' '+ scene_['zipcode']);
+
+ var scene_point= new google.maps.LatLng(parseFloat(  scene_['latitude'] ), parseFloat( scene_['longitude'] ));
+                                  logger('scene_point is ');
+                                  logger(scene_point);
+                                   GEOCODER.geocode({'latLng': scene_point}, function(results, status) 
+                                   {
+                                                                if (status == google.maps.GeocoderStatus.OK)
+                                                                {
+                                                                  logger('results.1'); logger(results[1]); logger(results); 
+                                                                  if(results[0])
+                                                                  {
+                                                                    $('#autocomplete').val( results[0].formatted_address); 
+                                                                    $('#autocomplete').attr('placeholder', results[0].formatted_address);
+                                                                    $('#address_modal').text(results[0].formatted_address);
+                                                                  }
+                                                                  if (results[1]) 
+                                                                  { 
+                                                                    
+                                                                         $('#lat_modal').text(parseFloat( scene.get('latitude') ));
+                                                                         $('#lng_modal').text(parseFloat( scene.get('longitude') )); 
+                                                                         var locality_to_address = {};
+                                                                          if(results[0].address_components)
+                                                                          {
+                                                                                var array_ = results[0].address_components; 
+                                                                                for(var i = 0 ; i < array_.length; i++)
+                                                                                { 
+                                                                                  for(var j = 0 ; j< array_[i]['types'].length; j++)
+                                                                                  { 
+                                                                                    locality_to_address[array_[i]['types'][j]]=array_[i]['long_name'];
+                                                                                  }
+                                                                                } 
+                                                                                $('#county_modal').text(locality_to_address['administrative_area_level_2']);
+                                                                                $('#city_modal').text(locality_to_address['sublocality']); 
+                                                                                $('#state_modal').text(locality_to_address['administrative_area_level_1']);
+                                                                                $('#country_modal').text(locality_to_address['country']);
+                                                                                $('#zipcode_modal').text(locality_to_address['postal_code']);
+                                                                                $('#address_1_modal').text(locality_to_address['street_number']+' '+locality_to_address['route']);
+                                                                          } 
+                                                                    
+                                                                     $('#autocomplete').attr('placeholder', results[1].formatted_address);
+                                                                  }
+                                                                }
+                                                               else 
+                                                                {
+                                                                  alert("Geocoder failed due to: " + status);
+                                                                }
+                                                              });
+
+
+
+
+                                  $('.es-example-modal-lg').modal('show');
+
+                            }
+            });//end ajax get SNMScene
+
+
+
+
+                     return objectId;   
+                  
+              } })(scene.id);
+    if(list_)
+    {
+      logger("adding to list "+index);
+      list_.add(scene);
+    }
+    else{
+      logger("unable to add to list "+index);
+    }
+                            var infowindow = new google.maps.InfoWindow({
+                                content:  '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>',
+                                maxWidth: 400,
+                                closeBoxMargin: "12px 4px 2px 2px",
+                                closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+                                infoBoxClearance: new google.maps.Size(1, 1)
                            });
 
                            var marker = new google.maps.Marker({
                                                 animation: google.maps.Animation.DROP,
                                                 map: MAP,
-                                                position: point.toLatLng(), 
-                                                title: point.get('title')});
+                                                position:  new google.maps.LatLng(parseFloat( scene.get('latitude')), parseFloat( scene.get('longitude'))) , 
+                                                title: scene.get('title')});
                             google.maps.event.addListener(marker, 'click', function() {
                               infowindow.open(MAP,marker);
-                            });
-                            marker.setMap( MAP );
-                          // console.log('active count == '+ new_tab.get('active_count'));
-                        // console.log('t_id == '+ new_tab.get('t_id'));
-                            // this.pointList.add(point);
-            }
-      
-        }); 
-     TABS.add(new_tab);
-  },
-  renderScenes: function(scenes,newTab){
-   
-          
-         newTab.set('map', MAP );
-         if(MAP)
-        { 
-  
-                          for(var i = 0; i < scenes.length ; i++)
-                          { 
-                                        var position_ = new point_().set({
-                                          latitude: scenes[i].get('latitude'), 
-                                          longitude: scenes[i].get('longitude'),
-                                          title: scenes[i].get('show_name')+" "+scenes[i].get('show_type'),
-                                          imdb_id: scenes[i].get('show').get('imdb_id')
-                                        }); 
-                                        newTab.add(position_); 
-                                        this.pointList.add(position_);
-                              
-                          } 
-                          newTab.set('active_count' , scenes.length); 
-                          newTab.set('t_id', this.tabCounter);
-                            $('.slider').slider({value: scenes.length});
-                            $('#current_number').text(scenes.length);
-                          this.renderMap(newTab);
-        }
-   
-         
-  }, 
-  renderPage: function(page_count, idx){
-TAB_SIZES[CURRENT_TAB]=page_count;
-    $('.slider').slider({max: page_count});
-    $('#total_number').text(page_count); 
-  },
-  render: function(type, selected_string, chosen){
- 
-     var loc = this.centerDefault ;
-     var str = this.defaultString;
-     if(type==='chosen')
-     {
-        loc=chosen;
-        str=selected_string;
-        ++this.tabCounter;
-        this.tabIndex[this.tabCounter]=new point_().set({
-          lat: loc.lat(),
-          lng: loc.lng(), 
-          title: selected_string
-        });
- 
-     }
-          var promise =  new Parse.Promise();
-      promise.done(this.renderScenes);
-      var promise_count = new Parse.Promise();
-      promise_count.done(this.renderPage);
+                              google.maps.event.addListener(infowindow,'domready' , function(){
+                                logger('domready');
+                                $('#load').on('click', function(e){
+                                       if( $('#actor_list'+scene.get('show').get('moviedb_id')+' li').length < 5)
+                                                                        {
+                                                                          $.ajax({
+                                                                                    type: 'GET',
+                                                                                     dataType: 'jsonp',
+                                                                                     async: false,
+                                                                                    url: "http://api.themoviedb.org/3/movie/"+scene.get('show').get('moviedb_id')+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76", 
+                                                                                    contentType: "application/json",
+                                                                                    success: function(json) {
+                                                                                        logger(json);
+                                                                                        var cast = json['cast'];
+                                                                                        for(var i = 0 ; cast && i < cast.length; i++)
+                                                                                        { 
+                                                                                          if(i<5 && $('#actor_list'+scene.get('show').get('moviedb_id')+' li').length < 5)
+                                                                                          { 
+                                                                                            var li_element = '<li  style=" white-space: normal;"> <span style="font-size: 8px;">'+cast[i]['name']+'</span></li>';
+                                                                                            $('#actor_list'+scene.get('show').get('moviedb_id')).append(li_element);
+                                                                                          }
+                                                                                        }
+                                                                                    },
+                                                                                    error: function(e) {
+                                                                                         logger(e.message);
+                                                                                    }
+                                                                                  }
+                                                                                );
+                                                                        }
+                                });
 
+
+$('#update_modal').on('click', function(){
+      /*
+      Save the scene!
+      */
+    logger('udpate_modal->click');
+     var show_pointer = {
+      
+                    className:'SNMMovie',
+                    objectId: $('#show_id_modal').text(),
+                    __type: "Pointer"
+                  
+     };
+      logger(show_pointer);
+     var quotes_string = $('#quotes_modal').val() ;
+     var quotes_;
+     if(quotes_string)
+     {
+        quotes_= quotes_string.split(',');
+     }
+     logger(quotes_string);
+     // alert(quotes_string);
+     var data_= {
+              description: $('#description_modal').val(),
+              latitude: $('#lat_modal').text() ,
+              longitude: $('#lng_modal').text() ,
+              show_name: $('#show_name_modal').text() ,
+              show_type: $('#show_type_modal').text() ,
+              country: $('#country_modal').text() ,
+              zipcode: $('#zipcode_modal').text() ,
+              city: $('#city_modal').text() ,
+              state: $('#state_modal').text()  ,
+              address_1: $('#address_1_modal').text()  ,
+              county: $('#county_modal').text() ,
+              start_hour: $('#start_hour_modal').attr('aria-valuenow')  ,
+              start_minute:  $('#start_minute_modal').attr('aria-valuenow')  ,
+              start_second: $('#start_second_modal').attr('aria-valuenow') ,
+              end_hour:  $('#end_hour_modal').attr('aria-valuenow') ,
+              end_minute: $('#end_minute_modal').attr('aria-valuenow') ,
+              end_second: $('#end_second_modal').attr('aria-valuenow') ,
+               show: show_pointer,
+               quotes: quotes_
+     }; 
+     logger(data_);
+        var replacer = function(key,val)
+            {
+                if(key=='start_hour' || 
+                  key=='start_minute' || 
+                  key=='start_second' || 
+                  key=='end_hour' || 
+                  key=='end_minute' || 
+                  key=='end_second'  
+                 )
+                {
+                    return parseInt(val);
+                }
+                else if( key=='latitude' || 
+                  key=='longitude')
+                {
+                  return parseFloat(val);
+                }
+                return val;
+            };
+             $.ajax({
+            type: 'PUT',
+            dataType: 'json',
+            headers: {
+                  'X-Parse-Application-Id':  "qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4" ,
+                  'X-Parse-REST-API-Key' : "ojVHFgNLjMwT1KMngErKPkxNQFVuowv2qUXtvjih"
+            },
+            url: "https://api.parse.com/1/classes/SNMScene/"+$('#objectId_modal').text(),
+
+            data: JSON.stringify(data_,replacer),
+            contentType: "application/json",
+            success: function(msg){
+              logger(msg);
+              var objectId = $('#objectId_modal').text();
+              var movieObjectId = msg['show']['objectId'];
+              logger('object id is '+objectId);
+              // SCENES_.add(msg);
+              $('.us-example-modal-lg').modal('show');
+              $('#panel_text_updated').text('Successfully updated scene for '+msg['show_type']+' : '+msg['show_name']+'.');
+                var tab_index = $('#tab_index').text();
+                logger('tab index is '+tab_index);
+                var listing_ =  TAB_SIZES['listing.'+tab_index];
+                var markers_ = TAB_SIZES['markers.'+tab_index];
+
+
+
+               for(var i = 0 ;  i < listing_.length; i++ )
+                  {
+                      var scene =  listing_.at(i);
+                      if(scene.id===$('#objectId_modal').text())
+                      {
+                        logger('scene matches '+$('#objectId').text());
+                        var marker = markers_[i];
+                        marker.setMap(null);
+                        var new_position = new google.maps.LatLng( parseFloat(msg['latitude']), parseFloat(msg['longitude']) );
+                        marker.setPosition(new_position);
+                        marker.setMap(MAP);
+                        logger("Removed marker from the map.");
+                        break;
+                      }
+                      else
+                      {
+                        logger(scene)
+                      }
+                  } 
+
+                }
+
+          });
+
+  });
+
+
+
+
+
+      $('#edit'+scene.get('show').get('moviedb_id')).on('click',function(e){
+                logger('edit called '); logger(e);
+               
+                logger('callback scene id is '+callback_scene_id);
+                                  logger('edit -- logger id is ');
+                                   $('#tab_index').text(current_tab);
+                                  $('#objectId_modal').text(scene.id);
+                                  logger('scene id is '+scene.id);
+                                  logger('movie is');  logger(scene.get('show')); logger(scene.get('show').id);  logger(scene.get('show').get('objectId'));
+
+                                  $('#show_id_modal').text(scene.get('show').id);
+                                  $('#show_name_modal').text(scene.get('show_name'));
+                                  $('#show_type_modal').text(scene.get('show_type'));
+
+                                  logger('edit - start_hour=='+scene.get('start_hour') ); logger('edit - start_minute=='+scene.get('start_minute') ); logger('edit - start_second=='+scene.get('start_second')  );  logger('edit - end_hour=='+scene.get('end_hour') ); logger('edit - end_minute=='+scene.get('end_minute')   );  logger('edit - end_second=='+scene.get('end_second')    );
+                                  $('#description_modal').attr('placeholder',scene.get('description')  );
+                                   $('#description_modal').text(scene.get('description')  );
+                                   $('#description_modal').val(scene.get('description')  );
+                                   $('#start_hour_modal').spinner('value',scene.get('start_hour') );   
+                                                                   $('#start_minute_modal').spinner('value',scene.get('start_minute') ); 
+                                                                   $('#start_second_modal').spinner('value',scene.get('start_second')); 
+                                                                   $('#end_hour_modal').spinner('value',scene.get('end_hour') );  
+                                                                   $('#end_minute_modal').spinner('value',scene.get('end_minute') ); 
+                                                                   $('#end_second_modal').spinner('value',scene.get('end_second') );
+                                                                   
+                                  var quote_string ='';
+                                  if(scene.get('quotes') )  { quote_string=scene.get('quotes') .toString();  }
+                                  $('#quotes_modal').attr('placeholder',quote_string);
+                                  $('#quotes_modal').val(quote_string);
+                                  $('#show_modal').attr('placeholder',scene.get('show_name') );
+                                    $('#lat_modal').text(parseFloat( scene.get('latitude')  ));
+                                   $('#lng_modal').text(parseFloat(  scene.get('longitude')  ));
+                                   logger('scene is ');
+                                   logger(scene);
+                                    var callback_scene_id = callbackOnClick.call();
+                                  
+  });
+
+
+
+                 $('.es-example-modal-lg').on('show.bs.modal', function(e) {
+                    logger('event is ');
+                    logger(e);
+                                logger('edit scene modal opened');
+                               logger('map modal creating ');
+                                var mapOptions_ = {  zoom: 12 ,  mapTypeId: google.maps.MapTypeId.ROADMAP,   mapTypeControl: true, mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR, position: google.maps.ControlPosition.BOTTOM_CENTER } };
+                                 MAP_MODAL = new google.maps.Map(document.getElementById('map-canvas-modal'), mapOptions_) ;
+                                 google.maps.event.addListenerOnce(MAP_MODAL, 'idle', function(){
+                                    $(window).resize();
+                                    google.maps.event.trigger(MAP_MODAL, 'resize');
+ 
+                                   if (navigator.geolocation) {
+                                      navigator.geolocation.getCurrentPosition(function (position) {
+                                      var initLocation_ = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                                           MAP_MODAL.setCenter(initLocation_);
+                                      var marker = new google.maps.Marker({ animation: google.maps.Animation.DROP,  map: MAP_MODAL, zIndex: 1000,   icon:  $('#current-location-img').attr('src')  , title: 'Current Location' , position: initLocation_ });
+                                   marker.setMap( MAP_MODAL );
+                                   MAP_MODAL.setCenter(initLocation_);
+                                  logger($('#lat_modal').val()); logger($('#lng_modal').val());
+                                var scene_point= new google.maps.LatLng(
+                                  parseFloat( $('#lat_modal').text()), 
+                                  parseFloat($('#lng_modal').text())
+                                );
+                                logger('scene point is');
+                                logger(scene_point);
+                                var infowindow = new google.maps.InfoWindow({   content:  '<div>'+$('#show_name_modal').text()+' original location'+'</div>',  maxWidth: 400,  closeBoxMargin: "12px 4px 2px 2px",  closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",  infoBoxClearance: new google.maps.Size(1, 1)  });
+         
+                                 var marker = new google.maps.Marker({ animation: google.maps.Animation.DROP, map: MAP_MODAL, position: scene_point, zIndex: 1000 ,  title:$('#show_name_modal').text()+' original location'   });
+
+                                 marker.setMap(MAP_MODAL);
+                                 MAP_MODAL.setCenter(scene_point);
+                                 google.maps.event.addListener(marker, 'click', function() {  infowindow.open(MAP_MODAL,marker); });
+
+                                       });
+                                }
+
+
+                                });//end addListenerOnce(MAP_MODAL 
+                              });
+                                    
+                                
+   $('#autocomplete').geocomplete({map: '#map-canvas-modal'}).bind('geocode:result',function(event, result){
+                logger('1');
+                                              logger(event);
+                                              logger(result);
+                    var scene_point= new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
+                                  var infowindow = new google.maps.InfoWindow({
+                                                                                    content:  '<div style="width:200px;">'+$('#show_name_modal').text()+' new location'+'</div>',
+                                                                                    maxWidth: 400,
+                                                                                    closeBoxMargin: "12px 4px 2px 2px",
+                                                                                    closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
+                                                                                    infoBoxClearance: new google.maps.Size(1, 1)
+                                                                               });
+
+                          if(MARKER_MODAL)
+                          {
+                            MARKER_MODAL.setMap(null);
+                          }
+                                 MARKER_MODAL = new google.maps.Marker({
+                                       animation: google.maps.Animation.DROP,
+                                       map: MAP_MODAL,
+                                       position: scene_point, 
+                                       zIndex: 1000 ,
+                                       title:$('#show_name_modal').text()+' new location' 
+                                 });
+
+                                 MARKER_MODAL.setMap(MAP_MODAL);
+                                 MAP_MODAL.setCenter(scene_point);
+                                 google.maps.event.addListener(MARKER_MODAL, 'click', function() {
+                                                                                              infowindow.open(MAP_MODAL,MARKER_MODAL);
+                                                                                            });
+                                              var locality_to_address = {};
+                                              var array_ = result['address_components']; 
+                                              for(var i = 0 ; i < array_.length; i++)
+                                              { 
+                                                for(var j = 0 ; j< array_[i]['types'].length; j++)
+                                                { 
+                                                  locality_to_address[array_[i]['types'][j]]=array_[i]['long_name'];
+                                                }
+                                              } 
+                                              $('#lat_modal').text(parseFloat(result['geometry']['location'].lat()));
+                                              $('#lng_modal').text( parseFloat(result['geometry']['location'].lng()));
+                                              $('#address_modal').text(result['formatted_address']);
+                                              $('#county_modal').text(locality_to_address['administrative_area_level_2']);
+                                              $('#city_modal').text(locality_to_address['sublocality']);
+                                              $('#state_modal').text(locality_to_address['administrative_area_level_1']);
+                                              $('#country_modal').text(locality_to_address['country']);
+                                              $('#zipcode_modal').text(locality_to_address['postal_code']);
+                                              $('#address_1_modal').text(locality_to_address['street_number']+' '+locality_to_address['route']);
+
+});          
+
+
+
+                                $('#delete'+scene.get('show').get('imdb_id')).on('click',function(e){
+                                    $('#show_name').text(scene.get('show_name'));
+                                    $('#show_type').text(scene.get('show_type'));
+                                    $('#address_1').text(scene.get('address_1'));
+                                    $('#releaseYear').text(scene.get('show').get('releaseYear'));
+                                    $('#poster_id').attr('src','https://image.tmdb.org/t/p/w300'+scene.get('show').get('poster_path') );
+                                    $('#city').text(scene.get('city'));
+                                    $('#state').text(scene.get('state'));
+                                    $('#tab_index').text(current_tab);
+                                    logger(scene);
+                                    logger(scene.id);
+                                    $('#objectId').text(scene.id); 
+                                    $('.ds-example-modal-lg').modal('show');
+                                });
+                                $('#load').trigger('click');
+
+                              });
+                                
+                            });
+                            marker.setMap( MAP ); 
+                            markers_.push(marker);
+  },
+  renderPage: function(page_count, idx){
+    TAB_SIZES[idx]=page_count; 
+    $('#total_number').text(page_count); 
+    return page_count;
+  },
+  renderCentralLocation: function( loc, iw_string )
+  {
+ 
+    if(loc && MAP)
+    {     
+          MAP.setCenter(loc);
+          var iw = new google.maps.InfoWindow({
+                                content: '<div>'+iw_string+'</div>'
+          });
+   
+         var m = new google.maps.Marker({
+                                            animation: google.maps.Animation.DROP,
+                                            map: MAP,
+                                            position: loc, 
+                                            zIndex: 1000,
+                                            icon:  $('#current-location-img').attr('src')  ,
+                                            title: iw_string});
+                       google.maps.event.addListener(m, 'click', function() {
+                              iw.open(MAP,m);
+                       });
+    }
+  },
+  findAndRenderScenes: function(loc,page_number,current_tab_number, tab_name){
+      logger(TAB_SIZES);
+      logger(CURRENT_TAB);
+      var promise =  new Parse.Promise();
+      promise.done(this.renderScenes); 
+      var promise_tab = new Parse.Promise();
+      promise_tab.done(this.renderTab); 
       var data = 
       {
           lat: loc.lat(),
           lng: loc.lng(),
           radius: 100,
           radius_type: 'miles',
-          page_size: this.PAGE_SIZE
+          page_size: this.PAGE_SIZE,
+          page: page_number
       };
+      logger('current_tab_number 1 '+current_tab_number);
+      if( (!current_tab_number) || current_tab_number===0)
+      {
+        current_tab_number=parseInt($('#current_tab').text());
+      }
+      if( (!current_tab_number) || current_tab_number===0)
+      {
+        current_tab_number=CURRENT_TAB;
+      }
+      logger('current_tab_number 2 '+current_tab_number);
+      Parse.Cloud.run('findClosest', data ).then(function(scenes){  
+       
 
-      Parse.Cloud.run('findClosest', data ).then(function(scenes){ 
-                        var newTab  = new LocationTab();
-                          promise.resolve(scenes,newTab);
+                          promise.resolve(scenes,current_tab_number);
                           return promise;
                           
                       }).then(function(scenes){
                         Parse.Cloud.run('findClosestCount', data).then( 
-                                function(count) {
-                                  promise_count.resolve(count);
-                                    return count;
+                                function(count) { 
+                                 
+                                      TAB_SIZES[current_tab_number]=count; 
+                                     $('#total_number').text(count); 
+                                     if(tab_name)
+                                     {
+                                         promise_tab.resolve(current_tab_number,tab_name,loc,count);
+                                          logger(TAB_SIZES);
+                                          logger(CURRENT_TAB);
+                                          return promise_tab;
+                                     }
+                                   
                                   }) ; 
-                      });  
+                      });
+      logger(TAB_SIZES);
+      logger(CURRENT_TAB);
+
+  }, 
+  renderTab: function(index_,tab_name,loc,page_count)
+  {
+     logger(TAB_SIZES);
+      logger(CURRENT_TAB);
+    logger('index_ is '+index_);
+    logger('renderTab,'+index_+','+tab_name+','+TAB_SIZES[index_]+','+page_count);
+        var $newElementHref=$('<a data-toggle="tab" class="map-nav" lat='+loc.lat()+'   lng='+loc.lng()+' id="'+index_+'" href="#">'+tab_name+'  </a>');
+
+        var $newElement = $('<li class="active" id="li_'+index_+'"></li>'); 
+        if(index_>1)
+        {
+  
+          var $newElementDelete = $('<button class="open-closeTabDiaglog close" data-toggle="modal" data-target=".bs-example-modal-lg" data-id="'+index_+'" title="Remove this page" type="button">×</button>');
+            var buttonCloseCallback = (function(tab_id){
+              return function(){
+                    $('.closeTabYes').data('id',tab_id);
+              }
+            }(index_)); 
+          $newElementDelete.on('click', buttonCloseCallback);
           
-      MAP.setCenter(loc);
-
-
-        CURRENT_TAB=this.tabCounter;
-        var $newElement = $('<li class="active" id="li_'+this.tabCounter+'"><a class="map-nav" lat='+loc.lat()+'   lng='+loc.lng()+' id="'+this.tabCounter+'" href="#">'+str+'</a></li>');
-          var callbackOnClick = (function(map,lat,lng,idx,count_map) { return function() { 
-          var center_=new point_().set({
-            latitude: lat,
-            longitude: lng
-          });
-           map.setCenter(center_.toLatLng()); 
+          $newElementHref.append($newElementDelete);
+        }
+          var callbackOnClick = (function(map,lat,lng,idx) { return function() { 
+            
+           var center_ = new google.maps.LatLng(lat,lng);
+           map.setCenter(center_); 
            $('li[id^=li_]').removeClass('active');
-           $('#li_'+idx).addClass('active');
-           CURRENT_TAB=idx;
-           // console.log('idx for new tab is '+idx);
-           // console.log('CURRENT_TAB is '+ CURRENT_TAB);
-        } })(MAP,loc.lat(),loc.lng(),this.tabCounter,this.countMap);
+           $('#li_'+index_).addClass('active');
+          $('#total_number').text(   TAB_SIZES[idx] );
+          $('#current_number').text(   TAB_SIZES['current.'+idx]  );
+          $('#current_lat').text(lat);
+          $('#current_lng').text(lng);
+          $('#current_tab').text(idx);
 
+            // if(!tab_name)
+            // {
+                 
+                       var current_number =  TAB_SIZES['current.'+idx];
+                        var total_number = TAB_SIZES[idx];
+                        if(current_number > total_number)
+                        {
+                          //error but fix it
+                          TAB_SIZES['current.'+idx]=total_number;
+                          $('#current_number').text(total_number);
+                           $('#total_number').text(total_number);
+                          logger('add class.disabled 2')
+                          $('#next_li').addClass('disabled');
+                        }
+                        else if(current_number===total_number)
+                        { 
+                          $('#current_number').text(total_number);
+                          $('#total_number').text(total_number);
+                          logger('add class disabled . 3')
+                          $('#next_li').addClass('disabled');
+                        }
+                        else
+                        {
+                          logger("REMOVING DISABLED.1");
+                          $('#next_li').removeClass('disabled');
+                        }
+        } })(MAP,loc.lat(),loc.lng(),index_);
+          $('#current_lat').text(loc.lat());
+          $('#current_lng').text(loc.lng()); 
         $newElement.on('click', callbackOnClick);
+        $newElement.append($newElementHref);
         $('#location-nav').append($newElement); 
            $('li[id^=li_]').removeClass('active');
-           $('#li_'+this.tabCounter).addClass('active');
-           
-       var iw = new google.maps.InfoWindow({
-                                content: '<div>'+str+'</div>'
-        });
-   
-     var m = new google.maps.Marker({
-                                        animation: google.maps.Animation.DROP,
-                                        map: MAP,
-                                        position: loc, 
-                                        zIndex: 1000,
-                                        icon:  $('#current-location-img').attr('src')  ,
-                                        title: str});
-                              google.maps.event.addListener(m, 'click', function() {
-                                                    iw.open(MAP,m);
-                                                  });
+           $('#li_'+index_).addClass('active'); 
+           $('#'+index_).click();
+             CURRENT_TAB++;
+      logger(TAB_SIZES);
+      logger(CURRENT_TAB);
+  },
+  renderNewTab: function(loc, tab_name, current_tab)
+  { 
+      logger(TAB_SIZES);
+      logger(CURRENT_TAB);
+    var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
+    // var current_tab =  $('#current_tab').text();
+    if(current_tab)
+    {
+      current_tab = parseInt(current_tab);
+    }
+    else
+    {
+      current_tab=0;
+    }
+    // current_tab++;
+    console.log('current tab renderNewTab is '+current_tab);
+      $('#current_tab').text((current_tab));
 
+    this.renderCentralLocation(point_latlng,tab_name);
+    this.findAndRenderScenes(point_latlng,1,current_tab, tab_name);
+     logger(TAB_SIZES);
+      logger(CURRENT_TAB);  
+  
   } 
-
 });
 var userLocationView = new UserLocationView();
-        $('.slider').slider({max:100});
-        $('.slider').on('slide',   function( event, ui ) {
-            $('#current_number').text(ui.value);
-            var tab = TABS.find(CURRENT_TAB);
-             
-        } );
-       $("#geocomplete").geocomplete(userLocationView['mapOptions']).bind("geocode:result", function(event, result){
- 
-                  var currentUser = Parse.User.current(); 
-                    var myLatlng = new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
-                    userLocationView.render('chosen' , result['formatted_address'], myLatlng);
+$('#next').on('click', function(){
+  if(!($('#next_li').hasClass('disabled')))
+  {
+      var current_number = parseInt($('#current_number').text());
+      // console.log('current_number === (1) '+current_number);
+      var current_page = current_number / 20;
+      var lat = $('#current_lat').text();
+      var lng = $('#current_lng').text();
 
-                     
-          })
-          .bind("geocode:error", function(event, status){
-            // console.log("ERROR: " + status);
-          })
-          .bind("geocode:multiple", function(event, results){
-            // console.log("Multiple: " + results.length + " results found");
-          });
- 
+      // console.log(current_number+','+current_page+','+lat+','+lng);
+      var location =new google.maps.LatLng( parseFloat(lat), parseFloat(lng));
+      console.log('next click - current number is '+current_number+' current page is '+current_page );
+      userLocationView.findAndRenderScenes(location, (current_page+1));
+  }
+  
 
 });
+        $('.spinner').spinner();
+       $("#geocomplete").geocomplete(userLocationView['mapOptions']).bind("geocode:result", function(event, result){
+                    var parse_geopoint = new Parse.GeoPoint({
+                        latitude: parseFloat(result['geometry']['location'].lat()),
+                        longitude: parseFloat(result['geometry']['location'].lng())
+                      });
+                    userLocationView.renderNewTab(parse_geopoint,result['formatted_address']);
+          })
+          .bind("geocode:error", function(event, status){
+      
+          })
+          .bind("geocode:multiple", function(event, results){ 
+          });
+$('.closeTabYes').on('click', function(){
+    var element = $('#li_'+$(this).data('id'));
+    element.remove(); 
+    $('#1').click();
+}); 
+
+
+
+
+
+
+
+$('.deleteSceneYes').on('click', function(){
+    var tab_index = $('#tab_index').text();
+    var listing_ =  TAB_SIZES['listing.'+tab_index];
+    var markers_ = TAB_SIZES['markers.'+tab_index];
+    logger(tab_index);
+    logger(listing_);
+    logger(markers_);
+       $.ajax({
+            type: 'DELETE',
+            dataType: 'json',
+            headers: {
+                  'X-Parse-Application-Id':  "qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4" ,
+                  'X-Parse-REST-API-Key' : "ojVHFgNLjMwT1KMngErKPkxNQFVuowv2qUXtvjih"
+            },
+            url: "https://api.parse.com/1/classes/SNMScene/"+$('#objectId').text(),
+
+            // data: JSON.stringify(data_,replacer),
+            contentType: "application/json",
+            success: function(msg){
+                $('#panel_text').text('Successfully deleted scene '+$('#show_type').text()+ ' : ' + $('#show_name').text() );
+                $('.ds-success-example-modal-lg').modal('show');
+                logger(TAB_SIZES);
+
+            },
+            error: function(error)
+            {
+              alert( "Failed to delete scen " + error.msg);
+            }
+          }
+        ); 
+
+    for(var i = 0 ;  i < listing_.length; i++ )
+    {
+        var scene =  listing_.at(i);
+        if(scene.id===$('#objectId').text())
+        {
+          logger('scene matches '+$('#objectId').text());
+          var marker = markers_[i];
+          marker.setMap(null);
+          logger("Removed marker from the map.");
+          break;
+        }
+        else
+        {
+          logger(scene)
+        }
+    } 
+
+});
+});
+
+
+
     </script>

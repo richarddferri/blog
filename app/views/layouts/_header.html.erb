@@ -3,7 +3,7 @@
 	 
 			<div class="navbar-inner">
 				<div class="container">
-					<h2>Scene Near Me</h2>
+					<h5>Scene Near Me</h5>
 				  <nav>
 							 <ul class="nav navbar-nav pull-left">
 								<li><Welcome to Scenes Near Me <span id="users_name"></span></li>
@@ -31,10 +31,19 @@ $(document).ready(function()
 {       
 Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
 var currentUser = Parse.User.current();
+
+if(currentUser)
+{
+	Parse.User.current().fetch().then(function(user){
+		$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name"));
+	} );
+}
  
+
 if (currentUser) {
-    $('#users_name').val("Welcome "+currentUser.get("first_name")+" " +currentUser.get("last_name"));
-    $('#users_name').text("Welcome "+currentUser.get("first_name")+" " +currentUser.get("last_name"));
+    // $('#users_name').val("Welcome "+cux/rrentUser.get("first_name")+" " +currentUser.get("last_name"));
+    
+    // console.log(currentUser);
     $('#signin').hide();
     $('#signout').show();
     $('#home_signedin').show();
