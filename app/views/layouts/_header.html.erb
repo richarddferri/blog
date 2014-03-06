@@ -47,7 +47,7 @@ if(currentUser)
 				    	if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
 				    	{
 				    			CURRENT_ROLE=adminRole;
-				    			$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name") + ' - ' + CURRENT_ROLE.get('name') );  
+				    			$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name") + ' - ' + CURRENT_ROLE.get('name')+" Access" );  
 				    			// console.log('current role is now set in header');
 				    			// console.log(CURRENT_ROLE);
 
