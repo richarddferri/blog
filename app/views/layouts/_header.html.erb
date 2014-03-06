@@ -36,6 +36,17 @@ if(currentUser)
 {
 	Parse.User.current().fetch().then(function(user){
 		$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name"));
+				var query = (new Parse.Query(Parse.Role));
+				query.equalTo("name", "Administrators");
+				query.equalTo("users", Parse.User.current() );
+				query.first().then(function(adminRole) {
+					console.log(adminRole);
+				    if (adminRole) {
+				        console.log("***********************user is an admin");
+				    } else {
+				        console.log("***********************user is not an admin");
+				    }
+				});		
 	} );
 }
  

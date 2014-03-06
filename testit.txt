@@ -1,0 +1,22 @@
+curl -X PUT \
+  -H "X-Parse-Application-Id: qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4" \
+  -H "X-Parse-Master-Key: RGMbajOgrsGpmegfW7rwXZxarCc7NwdOtliVeTa8" \
+  -H "Content-Type: application/json" \
+  -d '{
+        "users": {
+          "__op": "AddRelation",
+          "objects": [
+            {
+              "__type": "Pointer",
+              "className": "_User",
+              "objectId": "k95WvkrSzl"
+            },
+            {
+              "__type": "Pointer",
+              "className": "_User",
+              "objectId": "IxTQKxFWcX"
+            }
+          ]
+        }
+      }' \
+  https://api.parse.com/1/roles/TllxRbnukH
