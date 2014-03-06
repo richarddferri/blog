@@ -192,10 +192,16 @@
 $(document).ready(function()
 {   
 
+ 
+
+
+
+
 var logger = function(str)
 {
      window.console && window.console.log(str);
-}     
+}   
+var CURRENT_ROLE=null;  
     Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
     var MAP;
     var MAP_MODAL;
@@ -206,6 +212,31 @@ var logger = function(str)
     var CURRENT_TAB=1;
     var DEFAULT_PAGE_SIZE=20;
 var currentUser = Parse.User.current();
+
+
+
+
+
+var query = (new Parse.Query(Parse.Role));
+        // query.equalTo("name", "Administrators");
+        query.equalTo("users", Parse.User.current() );
+        query.first().then(function(adminRole) {
+          // console.log(adminRole);
+
+            if (adminRole) {
+              if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
+              {
+                  CURRENT_ROLE=adminRole;
+                  logger(CURRENT_ROLE);
+                  logger('add scene current role is '+CURRENT_ROLE.get('name'));
+              }
+            
+                // console.log("***********************user is an admin");
+            } else {
+                logger("add scene ***********************user is not an admin");
+            }
+        });  
+
 
  var snm_scene = Parse.Object.extend("SNMScene");
 

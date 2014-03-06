@@ -208,6 +208,7 @@
     <script>
 $(document).ready(function()
 {  
+  var CURRENT_ROLE=null;
 
 var logger = function(str)
 {
@@ -220,8 +221,30 @@ var logger = function(str)
     var CURRENT_TAB=1;
     var DEFAULT_PAGE_SIZE=20;
     var CURRENT_USER  = Parse.User.current().fetch().then(function(user)
-                            {
+    {
+var query = (new Parse.Query(Parse.Role));
+        // query.equalTo("name", "Administrators");
+        query.equalTo("users", user );
+        query.first().then(function(adminRole) {
+          console.log(adminRole);
 
+            if (adminRole) {
+              if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
+              {
+                  CURRENT_ROLE=adminRole;
+                  logger(CURRENT_ROLE);
+                  // logger('add user current role is '+CURRENT_ROLE.get('name'));
+                  if(CURRENT_ROLE.get('name')=='Standard')
+                  {
+                    $('#next').hide();
+                  }
+              }
+            
+                // console.log("***********************user is an admin");
+            } else {
+                logger("add user ***********************user is not an admin");
+            }
+        });   
                                 Parse.GeoPoint.current({
                                                           success: function(point){
                                                                                       logger('fetched point');
@@ -633,8 +656,15 @@ var UserLocationView = Backbone.View.extend({
     else{
       logger("unable to add to list "+index);
     }
+    var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
+     var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
+     var content_=normal_content;
+     if(CURRENT_ROLE.get('name')=='Administrators')
+     {
+        content_=admin_content;
+     }
                             var infowindow = new google.maps.InfoWindow({
-                                content:  '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>',
+                                content: content_ ,
                                 maxWidth: 400,
                                 closeBoxMargin: "12px 4px 2px 2px",
                                 closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",

@@ -6,7 +6,7 @@
 					<h5>Scene Near Me</h5>
 				  <nav>
 							 <ul class="nav navbar-nav pull-left">
-								<li><Welcome to Scenes Near Me <span id="users_name"></span></li>
+								<li><Welcome to Scenes Near Me <span id="users_name"></span>    </li>
 								  
 							</ul> 
 					</nav>  
@@ -31,20 +31,38 @@ $(document).ready(function()
 {       
 Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
 var currentUser = Parse.User.current();
+var CURRENT_ROLE=null;
 
 if(currentUser)
 {
 	Parse.User.current().fetch().then(function(user){
 		$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name"));
 				var query = (new Parse.Query(Parse.Role));
-				query.equalTo("name", "Administrators");
+				// query.equalTo("name", "Administrators");
 				query.equalTo("users", Parse.User.current() );
 				query.first().then(function(adminRole) {
-					console.log(adminRole);
+					// console.log(adminRole);
+
 				    if (adminRole) {
-				        console.log("***********************user is an admin");
+				    	if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
+				    	{
+				    			CURRENT_ROLE=adminRole;
+				    			$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name") + ' - ' + CURRENT_ROLE.get('name') );  
+				    			// console.log('current role is now set in header');
+				    			// console.log(CURRENT_ROLE);
+
+				    			 if( CURRENT_ROLE.get('name')=='Administrators' )
+								    {
+								    	// console.log('add scene is now enabled.');
+								    	 $('#add_scene').show();
+								   	} 
+				    			// console.log(CURRENT_ROLE);
+				    			// console.log('current role is '+CURRENT_ROLE.get('name'));
+				    	}
+				    
+				        // console.log("***********************user is an admin");
 				    } else {
-				        console.log("***********************user is not an admin");
+				        // console.log("***********************user is not an admin");
 				    }
 				});		
 	} );
@@ -58,7 +76,10 @@ if (currentUser) {
     $('#signin').hide();
     $('#signout').show();
     $('#home_signedin').show();
-      $('#add_scene').show();
+    if(CURRENT_ROLE && CURRENT_ROLE['name']=='Administrators')
+    {
+    	 $('#add_scene').show();
+   	}     
     $('#home_signedout').hide();
 } else {
      $('#signin').show();
