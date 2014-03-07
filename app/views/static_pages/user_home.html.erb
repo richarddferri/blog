@@ -106,6 +106,28 @@
       </div>
   
     </div> 
+<div class="modal fade nss-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content"> 
+           <div class="modal-header">
+                  <button class="close" data-dismiss="modal">×</button>
+                    <h3 class="panel-title">Confirmation</h3> 
+                </div>
+            <div class="modal-body">
+              
+                <h3 class="panel-title">No scenes found</h3> 
+                
+            </div>
+
+            <div class="modal-footer text-center">  
+               <button class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+
+        </div>
+      </div>
+  
+    </div>     
     <div class="modal fade ds-success-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
 
@@ -172,7 +194,7 @@
            </div>
           <div class="panel-heading">
 
-            <h3 class="panel-title">Specify a location</h3> 
+            <h3 class="panel-title">Click here to switch: Specify a <a href="#" class="panel-title" id="location_link">location</a> or <a href="#" class="panel-title" id="scene_name_link">name</a></h3> 
           </div>
           <div class="panel-body">
             <form accept-charset="UTF-8" role="form" id="geolocation">
@@ -186,10 +208,12 @@
                 <div class="form-group text-center">
                    <ul class="pager"><li> <span style='border:none;' id="current_number"></span> of <span style='border:none;' id="total_number"></span><span class='radius' style="display:none;"> - <span style='border:none;' class='settings'>Radius in miles</span> <input stclass='spinner'  size=4 id="radius" value="100"> </span></li><li id='next_li'><a id='next' href="#">Next</a></li></ul><input id='current_lat' type='hidden'/> <input id='current_lng' type='hidden'/> <input id='current_tab' type='hidden'/> 
  
-                <div class="form-group">
-                  <input id="geocomplete" class="form-control" placeholder="Specify a location." name="geocomplete" type="text">
+                <div id="geocomplete_form" class="form-group">
+                  <input id="geocomplete" class="form-control" placeholder="Specify a Geographic Location." name="geocomplete" type="text">
                 </div>
-            
+                <div id="name_form" class="form-group" style="display:none;">
+                  <input id="namecomplete" class="form-control" placeholder="Specify a Show Name." name="geocomplete" type="text">
+                </div>
 
               </fieldset>
             </form>
@@ -208,6 +232,20 @@
     <script>
 $(document).ready(function()
 {  
+
+
+
+
+
+  $('#scene_name_link').on('click', function(){
+      $('#geocomplete_form').hide();
+      $('#name_form').show();
+  });
+  $('#location_link').on('click', function(){
+      $('#geocomplete_form').show();
+      $('#name_form').hide();
+  });
+
   var CURRENT_ROLE=null;
 
 var logger = function(str)
@@ -1140,9 +1178,36 @@ $('#update_modal').on('click', function(){
       logger(TAB_SIZES);
       logger(CURRENT_TAB);
   },
-  renderNewTab: function(loc, tab_name, current_tab)
+  renderNewTab: function(loc, tab_name, current_tab, scenes_)
   { 
-      logger(TAB_SIZES);
+    if(scenes_)
+    {
+        logger(TAB_SIZES);
+        logger(CURRENT_TAB);
+        var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
+        // var current_tab =  $('#current_tab').text();
+        if(current_tab)
+        {
+          current_tab = parseInt(current_tab);
+        }
+        else
+        {
+          current_tab=0;
+        }
+        TAB_SIZES[CURRENT_TAB]=scenes_.length; 
+        // current_tab++;
+        console.log('current tab renderNewTab is '+current_tab);
+          $('#current_tab').text((current_tab));
+        var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
+        this.renderCentralLocation(point_latlng,tab_name); 
+        this.renderScenes(  scenes_,current_tab ) ;
+        this.renderTab( current_tab, tab_name, point_latlng ,scenes_.length );//(current_tab_number,tab_name,loc,count);
+        logger(TAB_SIZES);
+        logger(CURRENT_TAB);  
+    }
+    else
+    {
+    logger(TAB_SIZES);
       logger(CURRENT_TAB);
     var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
     // var current_tab =  $('#current_tab').text();
@@ -1161,7 +1226,9 @@ $('#update_modal').on('click', function(){
     this.renderCentralLocation(point_latlng,tab_name);
     this.findAndRenderScenes(point_latlng,1,current_tab, tab_name);
      logger(TAB_SIZES);
-      logger(CURRENT_TAB);  
+      logger(CURRENT_TAB);       
+    }
+   
   
   } 
 });
@@ -1201,6 +1268,63 @@ $('.closeTabYes').on('click', function(){
     element.remove(); 
     $('#1').click();
 }); 
+$( "#namecomplete" ).autocomplete({
+                source: function( request, response ) {
+                      // console.log(request);
+                      var data = 
+                      {
+                          query: request['term']
+                      };
+                          Parse.Cloud.run('findMovieByName', data ).then(function(movies){ 
+                            // console.log(movies);
+                             response( $.map( movies, function( movie ) {
+                                      return {
+                                          label: ' Movie: ' + movie.get('title')+', Release Date: '+movie.get('release_date')+' ',
+                                          value: movie.get('title') ,
+                                          id: movie['id'],
+                                          show_type: 'Movie'
+                                      }
+                              }));
+                          });
+                },
+                minLength: 3,
+            select: function( event, ui ) {
+              console.log(event);
+              console.log(ui);
+                var data = 
+                      {
+                          query: ui['item']['value']
+                      };
+              // alert('selected '+ui['item']['value']);
+              Parse.Cloud.run('findSceneMovieByName', data).then(function(scenes){
+                  
+                  console.log(scenes);
+                  console.log('length is '+scenes.length);
+                  if(scenes.length > 0)
+                  {
+                    console.log(scenes[0]);
+                    userLocationView.renderNewTab(scenes[0].get('location'),ui['item']['value'] ,CURRENT_TAB, scenes);
+                  }
+                  else
+                  {
+                    $('.nss-example-modal-lg').modal('show');
+                  }
+                  
+              });
+              // console.log(ui);
+             //  $('#show_name').text(ui['item']['value']);
+             //  $('#show_id').text(ui['item']['id']);
+             //  $('#show_type').text(ui['item']['show_type']);
+             // $('#show').attr('placeholder', ui['item']['value']);
+
+            },
+            open: function() {
+            $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+            $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            } 
+          });
 
 
 
