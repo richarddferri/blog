@@ -76,6 +76,8 @@
                   <input id="show_id_modal" type="hidden">
                   <input id="show_name_modal" type="hidden">
                   <input id="show_type_modal" type="hidden">
+
+                  <input id="class_name_modal" type="hidden">
                   <input id="objectId_modal" type="hidden">
                 </div>
                   <div class="form-group text-center">
@@ -164,6 +166,7 @@
                   <input id="show_id" type="hidden">
                   <input id="show_name" type="hidden">
                   <input id="show_type" type="hidden">
+                  <input id="class_name" type="hidden">
                 </div>
                  <div class="form-group text-center">
                  <span style="float:left;"> <b>Start </b><input class='spinner'  size=4 id="start_hour" value="HH">:<input class='spinner' id="start_minute"  size=4 value="MM">:<input class='spinner'  size=4 id="start_second" value="SS">
@@ -539,15 +542,36 @@ var userLocationView = new UserLocationView();
                       {
                           query: request['term']
                       };
-                          Parse.Cloud.run('findMovieByName', data ).then(function(movies){ 
+                          // Parse.Cloud.run('findMovieByName', data ).then(function(movies){ 
+
+                          Parse.Cloud.run('findShow', data ).then(function(movies){ 
                             // console.log(movies);
+
                              response( $.map( movies, function( movie ) {
-                                      return {
+                               var className = 'Movie';
+                               logger(movie);
+                               // logger('class name is '+movie.get('className'));
+                               logger('class name is '+movie['className']);
+                                  if(movie['className']=='SNMTvShow'){
+                                     logger('tv show');
+                                     return {
+                                          label: ' Television : ' + movie.get('name')+', First Air Date: '+movie.get('firstAirYear')+'-'+movie.get('firstAirMonth')+'-'+movie.get('firstAirDay')+' ',
+                                          value: movie.get('name') ,
+                                          id: movie['id'],
+                                          show_type: 'Television'
+                                      }
+                                  }
+                                  else
+                                  {
+                                      logger('movie');
+                                     return {
                                           label: ' Movie: ' + movie.get('title')+', Release Date: '+movie.get('release_date')+' ',
                                           value: movie.get('title') ,
                                           id: movie['id'],
                                           show_type: 'Movie'
                                       }
+                                  }
+                                     
                               }));
                           });
                 },
@@ -556,8 +580,18 @@ var userLocationView = new UserLocationView();
               // console.log(ui);
               $('#show_name').text(ui['item']['value']);
               $('#show_id').text(ui['item']['id']);
+              if(ui['item']['show_type']=='Television')
+              {
+                $('#class_name').text('SNMTvShow');
+              }
+              else
+              {
+                 $('#class_name').text('SNMMovie');
+              }
+              
               $('#show_type').text(ui['item']['show_type']);
              $('#show').attr('placeholder', ui['item']['value']);
+             logger(ui);
 
             },
             open: function() {
@@ -576,7 +610,7 @@ var userLocationView = new UserLocationView();
       
      var show_pointer = {
       
-                    className:'SNMMovie',
+                    className:  $("#class_name").text(),
                     objectId: $('#show_id').text(),
                     __type: "Pointer"
                   
@@ -610,6 +644,32 @@ var userLocationView = new UserLocationView();
                show: show_pointer,
                quotes: quotes_
      }; 
+     if($("#class_name").text()=='SNMTvShow')
+     {
+      logger("SNMTvShow");
+      data_= {
+              description: $('#description').val(),
+              latitude: $('#lat').text() ,
+              longitude: $('#lng').text() ,
+              show_name: $('#show_name').text() ,
+              show_type: $('#show_type').text() ,
+              country: $('#country').text() ,
+              zipcode: $('#zipcode').text() ,
+              city: $('#city').text() ,
+              state: $('#state').text()  ,
+              address_1: $('#address_1').text()  ,
+              county: $('#county').text() ,
+              start_hour: $('#start_hour').attr('aria-valuenow')  ,
+              start_minute:  $('#start_minute').attr('aria-valuenow')  ,
+              start_second: $('#start_second').attr('aria-valuenow') ,
+              end_hour:  $('#end_hour').attr('aria-valuenow') ,
+              end_minute: $('#end_minute').attr('aria-valuenow') ,
+              end_second: $('#end_second').attr('aria-valuenow') ,
+              description_location: $('#description_location').val(),
+               tv_show: show_pointer,
+               quotes: quotes_
+     };   
+     }
       var replacer = function(key,val)
             {
                 if(key=='start_hour' || 
@@ -644,7 +704,18 @@ var userLocationView = new UserLocationView();
             success: function(msg){
               logger(msg);
               var objectId = msg['objectId']; 
-              var movieObjectId = msg['show']['objectId'];
+               var movieObjectId = '';
+               var className='SNMMovie';
+              if(msg['tv_show'])
+              {
+                  movieObjectId = msg['tv_show']['objectId'];
+                  className='SNMTvShow';
+              }
+              else
+              {
+                   movieObjectId = msg['show']['objectId'];
+              }
+             
               logger('object id is '+objectId);
               SCENES_.add(msg);
 
@@ -657,16 +728,21 @@ var userLocationView = new UserLocationView();
                                   'X-Parse-Application-Id':  "qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4" ,
                                   'X-Parse-REST-API-Key' : "ojVHFgNLjMwT1KMngErKPkxNQFVuowv2qUXtvjih"
                             },
-                            url: "https://api.parse.com/1/classes/SNMMovie/"+movieObjectId,
+                            url: "https://api.parse.com/1/classes/"+className+"/"+movieObjectId,
 
                             // data: JSON.stringify(data_,replacer),
                             contentType: "application/json",
                             success: function(movie){
+                              logger('class name == '+className);
                               logger(movie);
 
-
+                                var poster_path = movie['poster_path'];
+                                if(!poster_path)
+                                {
+                                  poster_path =  movie['backdrop_path'];
+                                }
                                    var infowindow = new google.maps.InfoWindow({
-                                                                content:  '<div class="panel panel-default" style="width: 300px;height: 250px;"><div class="panel-heading" > <a href="http://www.imdb.com/title/'+movie['imdb_id']+'/" target="_blank">'+msg['show_name']+'</a><i>'+movie['releaseYear'] +'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+movie['poster_path']+'"/><ul id="actor_list'+movie['moviedb_id']+'"></ul></div></div><div class="panel-footer"><button id="load" style="visibility: hidden;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>',
+                                                                content:  '<div class="panel panel-default" style="width: 300px;height: 250px;"><div class="panel-heading" > <a href="http://www.imdb.com/title/'+movie['imdb_id']+'/" target="_blank">'+msg['show_name']+'</a><i>'+movie['releaseYear'] +'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+poster_path+'"/><ul id="actor_list'+movie['moviedb_id']+'"></ul></div></div><div class="panel-footer"><button id="load" style="visibility: hidden;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>',
                                                                 maxWidth: 400,
                                                                 closeBoxMargin: "12px 4px 2px 2px",
                                                                 closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
@@ -724,9 +800,15 @@ var userLocationView = new UserLocationView();
                                                                     $('#city').text(msg['city']);
                                                                     $('#state').text(msg['state']); 
                                                                     $('#objectId').text(objectId); 
+                                                                    $("#class_name_modal").text(msg['className']);
                                                                     $('.ds-example-modal-lg').modal('show');
                                     $('#releaseYear').text(movie['releaseYear']);
-                                    $('#poster_id').attr('src','https://image.tmdb.org/t/p/w300'+movie['poster_path'] );
+                                     var poster_path = movie['poster_path'];
+                                      if(!poster_path)
+                                      {
+                                        poster_path =  movie['backdrop_path'];
+                                      }
+                                    $('#poster_id').attr('src','https://image.tmdb.org/t/p/w300'+poster_path );
                                      
                                 });
 
@@ -735,9 +817,13 @@ $('#update_modal').on('click', function(){
       Save the scene!
       */
     logger('udpate_modal->click');
-     var show_pointer = {
-      
-                    className:'SNMMovie',
+    var className_='SNMMovie';
+    if($('#show_type_modal').text()=='Television')
+     {
+      className_ = 'SNMTvShow';
+     }
+     var show_pointer = { 
+                    className: className_,
                     objectId: $('#show_id_modal').text(),
                     __type: "Pointer"
                   
@@ -756,7 +842,7 @@ $('#update_modal').on('click', function(){
               description_location: $('#description_location_modal').val(),
               latitude: $('#lat_modal').text() ,
               longitude: $('#lng_modal').text() ,
-              show_name: $('#show_name_modal').text() ,
+              show_name: $('#show_name_modal').text() , 
               show_type: $('#show_type_modal').text() ,
               country: $('#country_modal').text() ,
               zipcode: $('#zipcode_modal').text() ,
@@ -773,6 +859,31 @@ $('#update_modal').on('click', function(){
                show: show_pointer,
                quotes: quotes_
      }; 
+     if($('#show_type_modal').text()=='Television')
+     {
+          data_= {
+                        description: $('#description_modal').val(),
+                        description_location: $('#description_location_modal').val(),
+                        latitude: $('#lat_modal').text() ,
+                        longitude: $('#lng_modal').text() ,
+                        show_name: $('#show_name_modal').text() , 
+                        show_type: $('#show_type_modal').text() ,
+                        country: $('#country_modal').text() ,
+                        zipcode: $('#zipcode_modal').text() ,
+                        city: $('#city_modal').text() ,
+                        state: $('#state_modal').text()  ,
+                        address_1: $('#address_1_modal').text()  ,
+                        county: $('#county_modal').text() ,
+                        start_hour: $('#start_hour_modal').attr('aria-valuenow')  ,
+                        start_minute:  $('#start_minute_modal').attr('aria-valuenow')  ,
+                        start_second: $('#start_second_modal').attr('aria-valuenow') ,
+                        end_hour:  $('#end_hour_modal').attr('aria-valuenow') ,
+                        end_minute: $('#end_minute_modal').attr('aria-valuenow') ,
+                        end_second: $('#end_second_modal').attr('aria-valuenow') ,
+                         tv_show: show_pointer,
+                         quotes: quotes_
+               };
+     }
      logger(data_);
         var replacer = function(key,val)
             {
@@ -807,7 +918,15 @@ $('#update_modal').on('click', function(){
             success: function(msg){
               logger(msg);
               var objectId = $('#objectId_modal').text();
-              var movieObjectId = msg['show']['objectId'];
+              var movieObjectId = '';
+              if(msg['tv_show'])
+              {
+                  movieObjectId = msg['tv_show']['objectId'];
+              }
+              else
+              {
+                movieObjectId = msg['show']['objectId'];
+              } 
               logger('object id is '+objectId);
               SCENES_.add(msg);
               $('.us-example-modal-lg').modal('show');
@@ -841,7 +960,7 @@ $('#update_modal').on('click', function(){
                                   logger(movie);
                                   logger(movie.id);
                                   logger(movie['objectId']);
-
+                                  $('#class_name_modal').text(movie['className']);
                                   $('#show_id_modal').text(movie['objectId']);
                                   $('#show_name_modal').text(msg['show_name']);
                                   $('#show_type_modal').text(msg['show_type']);

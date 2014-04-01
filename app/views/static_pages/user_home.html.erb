@@ -694,8 +694,23 @@ var UserLocationView = Backbone.View.extend({
     else{
       logger("unable to add to list "+index);
     }
-    var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
-     var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
+    var admin_content = '';
+    var normal_content ='';
+    logger('scene is ');
+     logger(scene);
+    if(scene.get('show_type')=='Television')
+    {
+      logger("televicion scene");
+    var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('tv_show').get('imdb_id')+'/" target="_blank">'+scene.get('name')+'</a><i>'+scene.get('tv_show').get('first_release_date')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('tv_show').get('backdrop_path')+'"/><ul id="actor_list'+scene.get('tv_show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('tv_show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('tv_show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
+      var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('tv_show').get('imdb_id')+'/" target="_blank">'+scene.get('name')+'</a><i>'+scene.get('tv_show').get('first_release_date')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('tv_show').get('backdrop_path')+'"/><ul id="actor_list'+scene.get('tv_show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
+    }
+    else
+    { 
+      logger("Movie Scene");
+      var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
+      var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
+    }  
+     
      var content_=normal_content;
      if(CURRENT_ROLE.get('name')=='Administrators')
      {
@@ -719,7 +734,12 @@ var UserLocationView = Backbone.View.extend({
                               google.maps.event.addListener(infowindow,'domready' , function(){
                                 logger('domready');
                                 $('#load').on('click', function(e){
-                                       if( $('#actor_list'+scene.get('show').get('moviedb_id')+' li').length < 5)
+                                     
+
+
+
+
+                                       if( scene.get('show') && $('#actor_list'+scene.get('show').get('moviedb_id')+' li').length < 5)
                                                                         {
                                                                           $.ajax({
                                                                                     type: 'GET',
@@ -745,6 +765,32 @@ var UserLocationView = Backbone.View.extend({
                                                                                   }
                                                                                 );
                                                                         }
+                                          else
+                                          {
+                                             $.ajax({
+                                                                                    type: 'GET',
+                                                                                     dataType: 'jsonp',
+                                                                                     async: false,
+                                                                                    url: "http://api.themoviedb.org/3/movie/"+scene.get('tv_show').get('moviedb_id')+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76", 
+                                                                                    contentType: "application/json",
+                                                                                    success: function(json) {
+                                                                                        logger(json);
+                                                                                        var cast = json['cast'];
+                                                                                        for(var i = 0 ; cast && i < cast.length; i++)
+                                                                                        { 
+                                                                                          if(i<5 && $('#actor_list'+scene.get('tv_show').get('moviedb_id')+' li').length < 5)
+                                                                                          { 
+                                                                                            var li_element = '<li  style=" white-space: normal;"> <span style="font-size: 8px;">'+cast[i]['name']+'</span></li>';
+                                                                                            $('#actor_list'+scene.get('tv_show').get('moviedb_id')).append(li_element);
+                                                                                          }
+                                                                                        }
+                                                                                    },
+                                                                                    error: function(e) {
+                                                                                         logger(e.message);
+                                                                                    }
+                                                                                  }
+                                                                                );
+                                          }
                                 });
 
 
@@ -866,8 +912,9 @@ $('#update_modal').on('click', function(){
 
 
 
-
-      $('#edit'+scene.get('show').get('moviedb_id')).on('click',function(e){
+      if(scene.get('tv_show'))
+      {
+   $('#edit'+scene.get('tv_show').get('moviedb_id')).on('click',function(e){
                 logger('edit called '); logger(e);
                
                 logger('callback scene id is '+callback_scene_id);
@@ -907,6 +954,51 @@ $('#update_modal').on('click', function(){
                                     var callback_scene_id = callbackOnClick.call();
                                   
   });
+      }
+      else
+      {
+               $('#edit'+scene.get('show').get('moviedb_id')).on('click',function(e){
+                          logger('edit called '); logger(e);
+                         
+                          logger('callback scene id is '+callback_scene_id);
+                                            logger('edit -- logger id is ');
+                                             $('#tab_index').text(current_tab);
+                                            $('#objectId_modal').text(scene.id);
+                                            logger('scene id is '+scene.id);
+                                            logger('movie is');  logger(scene.get('show')); logger(scene.get('show').id);  logger(scene.get('show').get('objectId'));
+
+                                            $('#show_id_modal').text(scene.get('show').id);
+                                            $('#show_name_modal').text(scene.get('show_name'));
+                                            $('#show_type_modal').text(scene.get('show_type'));
+
+                                            logger('edit - start_hour=='+scene.get('start_hour') ); logger('edit - start_minute=='+scene.get('start_minute') ); logger('edit - start_second=='+scene.get('start_second')  );  logger('edit - end_hour=='+scene.get('end_hour') ); logger('edit - end_minute=='+scene.get('end_minute')   );  logger('edit - end_second=='+scene.get('end_second')    );
+                                            $('#description_modal').attr('placeholder',scene.get('description')  );
+                                             $('#description_modal').text(scene.get('description')  );
+                                             $('#description_modal').val(scene.get('description')  );
+                                             $('#description_location_modal').attr('placeholder',scene.get('description_location')  );
+                                             $('#description_location_modal').text(scene.get('description_location')  );
+                                             $('#description_location_modal').val(scene.get('description_location')  );
+                                             $('#start_hour_modal').spinner('value',scene.get('start_hour') );   
+                                                                             $('#start_minute_modal').spinner('value',scene.get('start_minute') ); 
+                                                                             $('#start_second_modal').spinner('value',scene.get('start_second')); 
+                                                                             $('#end_hour_modal').spinner('value',scene.get('end_hour') );  
+                                                                             $('#end_minute_modal').spinner('value',scene.get('end_minute') ); 
+                                                                             $('#end_second_modal').spinner('value',scene.get('end_second') );
+                                                                             
+                                            var quote_string ='';
+                                            if(scene.get('quotes') )  { quote_string=scene.get('quotes') .toString();  }
+                                            $('#quotes_modal').attr('placeholder',quote_string);
+                                            $('#quotes_modal').val(quote_string);
+                                            $('#show_modal').attr('placeholder',scene.get('show_name') );
+                                              $('#lat_modal').text(parseFloat( scene.get('latitude')  ));
+                                             $('#lng_modal').text(parseFloat(  scene.get('longitude')  ));
+                                             logger('scene is ');
+                                             logger(scene);
+                                              var callback_scene_id = callbackOnClick.call();
+                                            
+            });      
+      }
+   
 
 
 
@@ -1002,9 +1094,9 @@ $('#update_modal').on('click', function(){
 
 });          
 
-
-
-                                $('#delete'+scene.get('show').get('imdb_id')).on('click',function(e){
+                if(scene.get('show'))
+                {
+                   $('#delete'+scene.get('show').get('imdb_id')).on('click',function(e){
                                     $('#show_name').text(scene.get('show_name'));
                                     $('#show_type').text(scene.get('show_type'));
                                     $('#address_1').text(scene.get('address_1'));
@@ -1018,6 +1110,26 @@ $('#update_modal').on('click', function(){
                                     $('#objectId').text(scene.id); 
                                     $('.ds-example-modal-lg').modal('show');
                                 });
+                }
+                else
+                {
+                   $('#delete'+scene.get('tv_show').get('imdb_id')).on('click',function(e){
+                                    $('#show_name').text(scene.get('name'));
+                                    $('#show_type').text(scene.get('show_type'));
+                                    $('#address_1').text(scene.get('address_1'));
+                                    $('#releaseYear').text(scene.get('tv_show').get('first_release_date'));
+                                    $('#poster_id').attr('src','https://image.tmdb.org/t/p/w300'+scene.get('tv_show').get('backdrop_path') );
+                                    $('#city').text(scene.get('city'));
+                                    $('#state').text(scene.get('state'));
+                                    $('#tab_index').text(current_tab);
+                                    logger(scene);
+                                    logger(scene.id);
+                                    $('#objectId').text(scene.id); 
+                                    $('.ds-example-modal-lg').modal('show');
+                                });
+                }
+
+                               
                                 $('#load').trigger('click');
 
                               });
@@ -1275,15 +1387,28 @@ $( "#namecomplete" ).autocomplete({
                       {
                           query: request['term']
                       };
-                          Parse.Cloud.run('findMovieByName', data ).then(function(movies){ 
+                          Parse.Cloud.run('findShow', data ).then(function(movies){ 
                             // console.log(movies);
                              response( $.map( movies, function( movie ) {
-                                      return {
+                              if(movie.get('release_date'))
+                              {
+                                return {
                                           label: ' Movie: ' + movie.get('title')+', Release Date: '+movie.get('release_date')+' ',
                                           value: movie.get('title') ,
                                           id: movie['id'],
                                           show_type: 'Movie'
                                       }
+                              }
+                              else
+                              {
+                                return {
+                                          label: ' Television: ' + movie.get('name')+', Release Date: '+movie.get('first_release_date')+' ',
+                                          value: movie.get('title') ,
+                                          id: movie['id'],
+                                          show_type: 'Television'
+                                      }
+                              }
+                                      
                               }));
                           });
                 },
