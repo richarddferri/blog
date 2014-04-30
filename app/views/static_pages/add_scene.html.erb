@@ -56,7 +56,7 @@
                 <div class="form-group" id="errors2"></div>
                 
                  <div class="form-group">
-                  <input style="width:49%;float:left;margin-left: 0px; margin-right: 2px; margin-top: 4px; margin-bottom: 4px;" type="text" name="geocomplete" placeholder="Location" class="form-control"  id="geocomplete_modal" autocomplete="off"><input style="width:49%;float:left;margin-left: 2px; margin-right: 0px; margin-top: 4px; margin-bottom: 4px;"type="text" name="descrption" placeholder="Location Description" class="form-control" id="description_location_modal" style="width:50%;float:right;"> 
+                  <input style="width:49%;float:left;margin-left: 0px; margin-right: 2px; margin-top: 4px; margin-bottom: 4px;" type="text" name="geocomplete" placeholder="Location" class="form-control"  id="geocomplete_modal" autocomplete="off"><input style="width:49%;float:left;margin-left: 2px; margin-right: 0px; margin-top: 4px; margin-bottom: 4px;" type="text" name="descrption" placeholder="Location Description" class="form-control" id="description_location_modal" style="width:50%;float:right;"> 
                 </div>
                 <div  class="form-group">
                   <input id="show_modal" style="margin-left: 0px; margin-right: 5px; margin-top: 4px; margin-bottom: 4px; width:99%;float:left;" class="form-control" placeholder="Specify a Show" name="show" type="text">
@@ -230,13 +230,13 @@ var query = (new Parse.Query(Parse.Role));
               if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
               {
                   CURRENT_ROLE=adminRole;
-                  logger(CURRENT_ROLE);
+                  // logger(CURRENT_ROLE);
                   logger('add scene current role is '+CURRENT_ROLE.get('name'));
               }
             
                 // console.log("***********************user is an admin");
             } else {
-                logger("add scene ***********************user is not an admin");
+                // logger("add scene ***********************user is not an admin");
             }
         });  
 
@@ -549,21 +549,54 @@ var userLocationView = new UserLocationView();
 
                              response( $.map( movies, function( movie ) {
                                var className = 'Movie';
-                               logger(movie);
+                               // logger(movie);
                                // logger('class name is '+movie.get('className'));
-                               logger('class name is '+movie['className']);
+                               // logger('class name is '+movie['className']);
                                   if(movie['className']=='SNMTvShow'){
-                                     logger('tv show');
-                                     return {
-                                          label: ' Television : ' + movie.get('name')+', First Air Date: '+movie.get('firstAirYear')+'-'+movie.get('firstAirMonth')+'-'+movie.get('firstAirDay')+' ',
+                                     // logger('tv show');
+                                     var seasons = movie.get('seasons');
+                                     var air_date = null;
+                                     if(seasons)
+                                     {
+                                        for(var i=0; i < seasons.length; i++)
+                                       {
+                                          if(seasons[i]['air_date'])
+                                          {
+                                            air_date = new Date(seasons[i]['air_date']);
+                                            if(air_date)
+                                            {
+                                               break;
+                                            }
+                                           
+                                          }
+                                       }
+                                     }
+                                     console.log("Air Date is ");
+                                     console.log(air_date);
+                                     if(air_date)
+                                     {
+                                      var air_date_str = air_date.getFullYear()+ '-'+( (air_date.getMonth()<10)?'0'+air_date.getMonth():air_date.getMonth() ) + '-'+( (air_date.getDate()<10)?'0'+air_date.getDate():air_date.getDate()) ;
+                                      return {
+                                          label: ' Television : ' + movie.get('name')+', First Air Date: '+air_date_str+' ',
                                           value: movie.get('name') ,
                                           id: movie['id'],
                                           show_type: 'Television'
                                       }
+                                     }
+                                     else
+                                     {
+                                      return {
+                                          label: ' Television : ' + movie.get('name')+' ',
+                                          value: movie.get('name') ,
+                                          id: movie['id'],
+                                          show_type: 'Television'
+                                      }
+                                     }
+                                     
                                   }
                                   else
                                   {
-                                      logger('movie');
+                                      // logger('movie');
                                      return {
                                           label: ' Movie: ' + movie.get('title')+', Release Date: '+movie.get('release_date')+' ',
                                           value: movie.get('title') ,
@@ -591,7 +624,7 @@ var userLocationView = new UserLocationView();
               
               $('#show_type').text(ui['item']['show_type']);
              $('#show').attr('placeholder', ui['item']['value']);
-             logger(ui);
+             // logger(ui);
 
             },
             open: function() {
@@ -646,7 +679,7 @@ var userLocationView = new UserLocationView();
      }; 
      if($("#class_name").text()=='SNMTvShow')
      {
-      logger("SNMTvShow");
+      // logger("SNMTvShow");
       data_= {
               description: $('#description').val(),
               latitude: $('#lat').text() ,
@@ -702,7 +735,7 @@ var userLocationView = new UserLocationView();
             data: JSON.stringify(data_,replacer),
             contentType: "application/json",
             success: function(msg){
-              logger(msg);
+              // logger(msg);
               var objectId = msg['objectId']; 
                var movieObjectId = '';
                var className='SNMMovie';
@@ -716,7 +749,7 @@ var userLocationView = new UserLocationView();
                    movieObjectId = msg['show']['objectId'];
               }
              
-              logger('object id is '+objectId);
+              // logger('object id is '+objectId);
               SCENES_.add(msg);
 
                 $('#panel_text').text('Successfully added scene '+msg['show_name'] + ' ' + msg['show_type'] );
@@ -733,34 +766,68 @@ var userLocationView = new UserLocationView();
                             // data: JSON.stringify(data_,replacer),
                             contentType: "application/json",
                             success: function(movie){
-                              logger('class name == '+className);
-                              logger(movie);
+                              // logger('class name == '+className);
+                              // logger(movie);
 
                                 var poster_path = movie['poster_path'];
                                 if(!poster_path)
                                 {
                                   poster_path =  movie['backdrop_path'];
                                 }
+                                var release_year = movie['releaseYear'];
+                                var air_date_ = null;
+                                var seasons = movie['seasons'];
+                                     
+                                     if(seasons)
+                                     {
+                                        for(var i=0; i < seasons.length; i++)
+                                       {
+                                        console.log(seasons[i]);
+                                          if(seasons[i]['air_date'])
+                                          {
+                                            air_date_ = new Date(seasons[i]['air_date']);
+                                            if(air_date_)
+                                            {
+                                               break;
+                                            }
+                                           
+                                          }
+                                       }
+                                     }
+                                console.log('classname is '+class_name);
+                                console.log('air date is '+air_date_);
+                                if(class_name=='SNMTvShow' && air_date_)
+                                {
+                                  release_year = air_date_.getFullYear();
+
+                                }
+
                                    var infowindow = new google.maps.InfoWindow({
-                                                                content:  '<div class="panel panel-default" style="width: 300px;height: 250px;"><div class="panel-heading" > <a href="http://www.imdb.com/title/'+movie['imdb_id']+'/" target="_blank">'+msg['show_name']+'</a><i>'+movie['releaseYear'] +'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+poster_path+'"/><ul id="actor_list'+movie['moviedb_id']+'"></ul></div></div><div class="panel-footer"><button id="load" style="visibility: hidden;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>',
+                                                                content:  '<div class="panel panel-default" style="width: 300px;height: 250px;"><div class="panel-heading" > <a href="http://www.imdb.com/title/'+movie['imdb_id']+'/" target="_blank">'+msg['show_name']+' -------</a><i>'+release_year +'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+poster_path+'"/><ul id="actor_list'+movie['moviedb_id']+'"></ul></div></div><div class="panel-footer"><button id="load" style="visibility: hidden;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+movie['moviedb_id']+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>',
                                                                 maxWidth: 400,
                                                                 closeBoxMargin: "12px 4px 2px 2px",
                                                                 closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",
                                                                 infoBoxClearance: new google.maps.Size(1, 1)
                                                            });
-                                logger('infowindow created');
+                                // logger('infowindow created');
                                                            var marker = new google.maps.Marker({
                                                                                 animation: google.maps.Animation.DROP,
                                                                                 map: MAP,
                                                                                 position:  new google.maps.LatLng(parseFloat( msg['latitude']), parseFloat( msg['longitude'])),
                                                                                 title: msg['title']});
-                                logger('marker created');
+                                // logger('marker created');
                                                             google.maps.event.addListener(marker, 'click', function() {
                                                               infowindow.open(MAP,marker);
                                                               google.maps.event.addListener(infowindow,'domready' , function(){
-                                                                logger('domready');
+                                                                // logger('domready');
+                                var actor_url="http://api.themoviedb.org/3/movie/"+movie['moviedb_id']+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76";//default is movie
+                                if(className=='SNMTvShow')
+                                {
+                                    actor_url="http://api.themoviedb.org/3/tv/"+movie['moviedb_id']+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76";
+                                }
+                                 
 
-
+                                
                                 $('#load').on('click', function(e){
                                        if( $('#actor_list'+movie['moviedb_id']+' li').length < 5)
                                                                         {
@@ -768,10 +835,10 @@ var userLocationView = new UserLocationView();
                                                                                     type: 'GET',
                                                                                      dataType: 'jsonp',
                                                                                      async: false,
-                                                                                    url: "http://api.themoviedb.org/3/movie/"+movie['moviedb_id']+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76", 
+                                                                                    url:  actor_url, 
                                                                                     contentType: "application/json",
                                                                                     success: function(json) {
-                                                                                        logger(json);
+                                                                                        // logger(json);
                                                                                         var cast = json['cast'];
                                                                                         for(var i = 0 ; cast && i < cast.length; i++)
                                                                                         { 
@@ -789,7 +856,6 @@ var userLocationView = new UserLocationView();
                                                                                 );
                                                                         }
                                 });
-
 
 
 
@@ -816,7 +882,7 @@ $('#update_modal').on('click', function(){
       /*
       Save the scene!
       */
-    logger('udpate_modal->click');
+    // logger('udpate_modal->click');
     var className_='SNMMovie';
     if($('#show_type_modal').text()=='Television')
      {
@@ -828,14 +894,14 @@ $('#update_modal').on('click', function(){
                     __type: "Pointer"
                   
      };
-      logger(show_pointer);
+      // logger(show_pointer);
      var quotes_string = $('#quotes_modal').val() ;
      var quotes_;
      if(quotes_string)
      {
         quotes_= quotes_string.split(',');
      }
-     logger(quotes_string);
+     // logger(quotes_string);
      // alert(quotes_string);
      var data_= {
               description: $('#description_modal').val(),
@@ -884,7 +950,7 @@ $('#update_modal').on('click', function(){
                          quotes: quotes_
                };
      }
-     logger(data_);
+     // logger(data_);
         var replacer = function(key,val)
             {
                 if(key=='start_hour' || 
@@ -916,7 +982,7 @@ $('#update_modal').on('click', function(){
             data: JSON.stringify(data_,replacer),
             contentType: "application/json",
             success: function(msg){
-              logger(msg);
+              // logger(msg);
               var objectId = $('#objectId_modal').text();
               var movieObjectId = '';
               if(msg['tv_show'])
@@ -927,15 +993,15 @@ $('#update_modal').on('click', function(){
               {
                 movieObjectId = msg['show']['objectId'];
               } 
-              logger('object id is '+objectId);
+              // logger('object id is '+objectId);
               SCENES_.add(msg);
               $('.us-example-modal-lg').modal('show');
               $('#panel_text_updated').text('Successfully updated scene for '+msg['show_type']+' : '+msg['show_name']+'.');
               for(var i=0; i < SCENES_.length; i++)
               {
                 var scene_ = SCENES_.at(i);
-                logger(objectId+' '+scene_.id);
-                logger(scene_);
+                // logger(objectId+' '+scene_.id);
+                // logger(scene_);
                 if(scene_ && scene_.id==objectId)
                 {
                     var marker=MARKERS_[i];
@@ -943,7 +1009,7 @@ $('#update_modal').on('click', function(){
                     marker.setPosition( new google.maps.LatLng( parseFloat(msg['latitude']), parseFloat(msg['longitude']) ) );
                     MAP.panTo( new google.maps.LatLng( parseFloat(msg['latitude']), parseFloat(msg['longitude']) ) ); 
                     marker.setMap(MAP);
-                    logger('marker moved.');
+                    // logger('marker moved.');
                 }
               }
             }
@@ -953,24 +1019,24 @@ $('#update_modal').on('click', function(){
                                   
 
                                  $('#edit'+movie['moviedb_id']).on('click',function(e){
-                                  logger('edit -- logger id is ');
+                                  // logger('edit -- logger id is ');
                       
                                   $('#objectId_modal').text(objectId);
-                                  logger('movie is'); 
-                                  logger(movie);
-                                  logger(movie.id);
-                                  logger(movie['objectId']);
+                                  // logger('movie is'); 
+                                  // logger(movie);
+                                  // logger(movie.id);
+                                  // logger(movie['objectId']);
                                   $('#class_name_modal').text(movie['className']);
                                   $('#show_id_modal').text(movie['objectId']);
                                   $('#show_name_modal').text(msg['show_name']);
                                   $('#show_type_modal').text(msg['show_type']);
 
-                                  logger('edit - start_hour=='+msg['start_hour'] );
-                                  logger('edit - start_minute=='+msg['start_minute'] );
-                                   logger('edit - start_second=='+msg['start_second'] );
-                                        logger('edit - end_hour=='+msg['end_hour'] );
-                                  logger('edit - end_minute=='+msg['end_minute'] );
-                                   logger('edit - end_second=='+msg['end_second'] );
+                                  // logger('edit - start_hour=='+msg['start_hour'] );
+                                  // logger('edit - start_minute=='+msg['start_minute'] );
+                                  //  logger('edit - start_second=='+msg['start_second'] );
+                                  //       logger('edit - end_hour=='+msg['end_hour'] );
+                                  // logger('edit - end_minute=='+msg['end_minute'] );
+                                  //  logger('edit - end_second=='+msg['end_second'] );
                                   $('#description_modal').attr('placeholder',msg['description']);
                                   $('#description_location_modal').attr('placeholder',msg['description_location']);
                                   $('#description_location_modal').text(msg['description_location']);
@@ -1004,12 +1070,7 @@ $('#update_modal').on('click', function(){
                                    {
                                                                 if (status == google.maps.GeocoderStatus.OK)
                                                                 {
-                                                                  logger('results.1');
-                                                                  logger(results[1]);
-                                                                  logger(results);
-
                                                                   
-
                                                                   if(results[0])
                                                                   {
                                                                     $('#autocomplete').val( results[0].formatted_address);
@@ -1074,7 +1135,7 @@ $('#update_modal').on('click', function(){
                          $('.es-example-modal-lg').on('show.bs.modal', function() {
 
 
-                                logger('map modal creating ');
+                                // logger('map modal creating ');
 
                                 var mapOptions_ = { 
                                   zoom: 12 ,
@@ -1115,19 +1176,14 @@ $('#update_modal').on('click', function(){
 
                                                  
                                                           marker.setMap( MAP_MODAL );
-                                                          MAP_MODAL.setCenter(initLocation_);
-                                                          
-
-
-                                                            logger($('#lat_modal').val());
-                                                            logger($('#lng_modal').val());
-
-
+                                                          MAP_MODAL.setCenter(initLocation_); 
+                                                            // logger($('#lat_modal').val());
+                                                            // logger($('#lng_modal').val()); 
                                 var scene_point= new google.maps.LatLng(
                                   parseFloat( $('#lat_modal').text()), 
                                   parseFloat($('#lng_modal').text())
                                 );
-                                logger(scene_point);
+                                // logger(scene_point);
                                 var infowindow = new google.maps.InfoWindow({
                                                                 content:  '<div>'+$('#show_name_modal').text()+' original location'+'</div>',
                                                                 maxWidth: 400,
@@ -1160,8 +1216,7 @@ $('#update_modal').on('click', function(){
 
                                   }).modal('show');
                                     
-                                });
-                                logger('trigger click');
+                                }); 
                                 $('#load').trigger('click');
                               }); 
                           });
@@ -1183,10 +1238,7 @@ $('#update_modal').on('click', function(){
           }
         );
 
-   $('#autocomplete').geocomplete({map: '#map-canvas-modal'}).bind('geocode:result',function(event, result){
-                logger('1');
-                                              logger(event);
-                                              logger(result);
+   $('#geocomplete_modal').geocomplete({map: '#map-canvas-modal'}).bind('geocode:result',function(event, result){ 
                     var scene_point= new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
                                   var infowindow = new google.maps.InfoWindow({
                                                                                     content:  '<div style="width:200px;">'+$('#show_name_modal').text()+' new location'+'</div>',
@@ -1245,10 +1297,7 @@ $('#update_modal').on('click', function(){
 $('.deleteSceneYes').on('click', function(){
     var tab_index = $('#tab_index').text();
     var listing_ =  TAB_SIZES['listing.'+tab_index];
-    var markers_ = TAB_SIZES['markers.'+tab_index];
-    logger(tab_index);
-    logger(listing_);
-    logger(markers_);
+    var markers_ = TAB_SIZES['markers.'+tab_index]; 
        $.ajax({
             type: 'DELETE',
             dataType: 'json',
@@ -1279,17 +1328,17 @@ $('.deleteSceneYes').on('click', function(){
         var scene =  SCENES_.at(i);
         if(scene.id===$('#objectId').text())
         {
-          logger('scene matches '+$('#objectId').text());
+          // logger('scene matches '+$('#objectId').text());
           var marker = MARKERS_[i];
-          logger('removing ');
-          logger(marker);
+          // logger('removing ');
+          // logger(marker);
           marker.setMap(null);
-          logger("Removed marker from the map.");
+          // logger("Removed marker from the map.");
           break;
         }
         else
         {
-          logger(scene)
+          // logger(scene)
         }
     } 
 

@@ -270,7 +270,7 @@ var query = (new Parse.Query(Parse.Role));
               if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
               {
                   CURRENT_ROLE=adminRole;
-                  logger(CURRENT_ROLE);
+                  // logger(CURRENT_ROLE);
                   // logger('add user current role is '+CURRENT_ROLE.get('name'));
                   if(CURRENT_ROLE.get('name')=='Standard')
                   {
@@ -280,16 +280,16 @@ var query = (new Parse.Query(Parse.Role));
             
                 // console.log("***********************user is an admin");
             } else {
-                logger("add user ***********************user is not an admin");
+                // logger("add user ***********************user is not an admin");
             }
         });   
                                 Parse.GeoPoint.current({
                                                           success: function(point){
-                                                                                      logger('fetched point');
-                                                                                      logger(point);
-                                                                                      logger('fetched user');
-                                                                                      logger(user);
-                                                                                      logger('user fetch');
+                                                                                      // logger('fetched point');
+                                                                                      // logger(point);
+                                                                                      // logger('fetched user');
+                                                                                      // logger(user);
+                                                                                      // logger('user fetch');
                                                                                         user.set('location', point);
                                                                                         var default_page_size = user.get('page_size');
                                                                                         var default_radius = user.get('radius_miles');
@@ -310,7 +310,7 @@ var query = (new Parse.Query(Parse.Role));
                                                                                         {
                                                                                             user.set('radius_miles', DEFAULT_RADIUS_MILES);
                                                                                         }
-                                                                                        logger(DEFAULT_RADIUS_MILES);
+                                                                                        // logger(DEFAULT_RADIUS_MILES);
                                                                                           $('#radius').val(DEFAULT_RADIUS_MILES);
                                                                                             user.save();     
                                                           }
@@ -434,12 +434,12 @@ var UserLocationView = Backbone.View.extend({
                                       return function(){
                                            if(current_location)
                                             {
-                                              logger('callback_function');
+                                              // logger('callback_function');
                                                     CURRENT_USER.set('location', current_location);
                                                      CURRENT_USER.fetch().then(function(user)
                                                                     {
-                                                                      logger(user);
-                                                                      logger('user fetch');
+                                                                      // logger(user);
+                                                                      // logger('user fetch');
                                                                       var default_page_size = user.get('page_size');
                                                                       var default_radius = user.get('radius_miles');
 
@@ -459,7 +459,7 @@ var UserLocationView = Backbone.View.extend({
                                                                       {
                                                                           user.set('radius_miles', DEFAULT_RADIUS_MILES);
                                                                       }
-                                                                      logger(DEFAULT_RADIUS_MILES);
+                                                                      // logger(DEFAULT_RADIUS_MILES);
                                                                         $('#radius').spinner({val: DEFAULT_RADIUS_MILES});
                                                                           user.save(); 
                                                                     });
@@ -518,20 +518,20 @@ var UserLocationView = Backbone.View.extend({
        }
        else
        {
-        logger('current_tab renderScenes is undefined');
+        // logger('current_tab renderScenes is undefined');
            current_tab_=1;
        }
         var listing = TAB_SIZES['listing.'+current_tab_];
         var markers = TAB_SIZES['markers.'+current_tab_];
         if(!listing)
         {
-          logger('new listing');
+          // logger('new listing');
           listing = new scene_list();
           markers = new Array();
           TAB_SIZES['listing.'+current_tab_]=listing;
           TAB_SIZES['markers.'+current_tab_]=markers;
         }
-       logger('current_number is  (2) .1 '+current_tab_);
+       // logger('current_number is  (2) .1 '+current_tab_);
          if(MAP)
         { 
                           var current_number = TAB_SIZES['current.'+current_tab_];
@@ -544,24 +544,24 @@ var UserLocationView = Backbone.View.extend({
                           {   
                               this.renderScene(scenes[i], (current_number+i), listing, markers , current_tab_);   
                           } 
-                          logger(TAB_SIZES);
-                          logger(CURRENT_TAB);
+                          // logger(TAB_SIZES);
+                          // logger(CURRENT_TAB);
 
-                          logger('current_number is  (2) .2 '+current_tab_);
+                          // logger('current_number is  (2) .2 '+current_tab_);
                            var total_number = TAB_SIZES[current_tab_];
                          
-                           logger('current_number is  (2) .3 '+current_number);
+                           // logger('current_number is  (2) .3 '+current_number);
                             current_number = current_number + scenes.length;
-                            logger('current_number is  (2) .4 '+current_number);
+                            // logger('current_number is  (2) .4 '+current_number);
                             TAB_SIZES['current.'+current_tab_]=(current_number);
-                            logger(TAB_SIZES);
-                            logger(CURRENT_TAB);
+                            // logger(TAB_SIZES);
+                            // logger(CURRENT_TAB);
 
                             $('#current_number').text(current_number);   
                             $('#total_number').text(total_number);
                             if(current_tab_ && current_number &&  current_number >= total_number )
                             {
-                              logger('add disabled 1');
+                              // logger('add disabled 1');
                                $('#next_li').addClass('disabled');
                             }               
         }
@@ -572,7 +572,7 @@ var UserLocationView = Backbone.View.extend({
   { 
                  
        var callbackOnClick = (function(objectId) { return function() { 
-            logger('callback - ajax');
+            // logger('callback - ajax');
             $.ajax({
                             type: 'GET',
                             dataType: 'json',
@@ -585,28 +585,36 @@ var UserLocationView = Backbone.View.extend({
                             // data: JSON.stringify(data_,replacer),
                             contentType: "application/json",
                             success: function(scene_){
-                              logger(scene_);
-                                  logger('scene returned ************');
-                                  logger(scene_);
-                                  $('#show_id_modal').text(scene_['show']['objectId']);
+                              // logger(scene_);
+                                  // logger('scene returned ************');
+                                  // logger(scene_);
+                                  if(scene_['show'])
+                                  {
+                                        $('#show_id_modal').text(scene_['show']['objectId']);
+                                  }
+                                  else
+                                  {
+                                        $('#show_id_modal').text(scene_['tv_show']['objectId']);
+                                  }
+                                 
                                   $('#show_name_modal').text(scene_['show_name']);
                                   $('#show_type_modal').text(scene_['show_type'] );
-                                  logger('edit -- get of scene refresh.');
-                                  logger('edit - start_hour=='+scene_['start_hour']  ); logger('edit - start_minute=='+scene_['start_minute'] ); logger('edit - start_second=='+scene_['start_second'] );  logger('edit - end_hour=='+scene_['end_hour']); logger('edit - end_minute=='+scene_['end_minute']    );  logger('edit - end_second=='+scene_['end_second']  );
+                                  // logger('edit -- get of scene refresh.');
+                                  // logger('edit - start_hour=='+scene_['start_hour']  ); logger('edit - start_minute=='+scene_['start_minute'] ); logger('edit - start_second=='+scene_['start_second'] );  logger('edit - end_hour=='+scene_['end_hour']); logger('edit - end_minute=='+scene_['end_minute']    );  logger('edit - end_second=='+scene_['end_second']  );
                                   $('#description_modal').attr('placeholder',scene_['description']  );
                                    $('#description_modal').text(scene_['description']  );
                                    $('#description_modal').val(scene_['description']  );
                                     $('#description_location_modal').attr('placeholder',scene_['description_location']  );
                                    $('#description_location_modal').text(scene_['description_location']  );
                                    $('#description_location_modal').val(scene_['description_location']  );
-                                   logger('description set to '+scene_['description'] );
+                                   // logger('description set to '+scene_['description'] );
                                    $('#start_hour_modal').spinner('value',scene_['start_hour'] );   
                                                                    $('#start_minute_modal').spinner('value',scene_['start_minute'] ); 
                                                                    $('#start_second_modal').spinner('value',scene_['start_second'] ); 
                                                                    $('#end_hour_modal').spinner('value',scene_['end_hour']  );  
                                                                    $('#end_minute_modal').spinner('value',scene_['end_minute'] ); 
                                                                    $('#end_second_modal').spinner('value',scene_['end_second'] );
-                                  logger('quotes '+scene_['quotes'] );                               
+                                  // logger('quotes '+scene_['quotes'] );                               
                                   var quote_string ='';
                                   if(scene_['quotes'] )  { quote_string=scene_['quotes'].toString();  }
                                   $('#quotes_modal').attr('placeholder',quote_string);
@@ -626,13 +634,13 @@ var UserLocationView = Backbone.View.extend({
                                   $('#autocomplete').attr('placeholder', scene_['address_1']+','+scene_['city']+','+scene_['state']+' '+ scene_['zipcode']);
 
  var scene_point= new google.maps.LatLng(parseFloat(  scene_['latitude'] ), parseFloat( scene_['longitude'] ));
-                                  logger('scene_point is ');
-                                  logger(scene_point);
+                                  // logger('scene_point is ');
+                                  // logger(scene_point);
                                    GEOCODER.geocode({'latLng': scene_point}, function(results, status) 
                                    {
                                                                 if (status == google.maps.GeocoderStatus.OK)
                                                                 {
-                                                                  logger('results.1'); logger(results[1]); logger(results); 
+                                                                  // logger('results.1'); logger(results[1]); logger(results); 
                                                                   if(results[0])
                                                                   {
                                                                     $('#autocomplete').val( results[0].formatted_address); 
@@ -688,25 +696,51 @@ var UserLocationView = Backbone.View.extend({
               } })(scene.id);
     if(list_)
     {
-      logger("adding to list "+index);
+      // logger("adding to list "+index);
       list_.add(scene);
     }
     else{
-      logger("unable to add to list "+index);
+      // logger("unable to add to list "+index);
     }
     var admin_content = '';
     var normal_content ='';
-    logger('scene is ');
+    // logger('scene is ');
      logger(scene);
-    if(scene.get('show_type')=='Television')
+    if(scene.get('tv_show') && scene.get('show_type')=='Television')
     {
-      logger("televicion scene");
-    var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('tv_show').get('imdb_id')+'/" target="_blank">'+scene.get('name')+'</a><i>'+scene.get('tv_show').get('first_release_date')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('tv_show').get('backdrop_path')+'"/><ul id="actor_list'+scene.get('tv_show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('tv_show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('tv_show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
-      var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('tv_show').get('imdb_id')+'/" target="_blank">'+scene.get('name')+'</a><i>'+scene.get('tv_show').get('first_release_date')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('tv_show').get('backdrop_path')+'"/><ul id="actor_list'+scene.get('tv_show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
+      // logger("televicion scene");
+      // logger(scene);
+      var seasons = scene.get('tv_show').get('seasons');
+      var air_date_string ="";
+       var air_date = null;
+      if(seasons)
+      {
+         for(var i=0; i < seasons.length; i++)
+         {
+              if(seasons[i]['air_date'])
+             {
+                air_date = new Date(seasons[i]['air_date']);
+                console.log("Air Date Is ");
+                console.log(air_date);
+                if(air_date)
+                {
+                   air_date_string = air_date.getFullYear();
+                   break;
+                }
+               
+             }
+         }
+     }
+           logger("TVShow Scene");
+      logger(scene);
+    var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('tv_show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+air_date_string+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('tv_show').get('poster_path')+'"/><ul id="actor_list'+scene.get('tv_show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('tv_show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('tv_show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
+      var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('tv_show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('tv_show').get('first_release_date')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('tv_show').get('poster_path')+'"/><ul id="actor_list'+scene.get('tv_show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
     }
-    else
+    else if(scene.get('show') )
     { 
       logger("Movie Scene");
+      logger(scene);
+      logger(scene.get('show'));
       var admin_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="edit'+scene.get('show').get('moviedb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button><button id="delete'+scene.get('show').get('imdb_id')+'" style="font-size: 9px;" type="button" data-target=".ds-example-modal-lg" class="btn btn-group-xs btn-primary">Delete</button></div></div>';
       var normal_content = '<div class="panel panel-default" style="width: 250px;height: 200px;"><div class="panel-heading" >('+(index+1)+')<a href="http://www.imdb.com/title/'+scene.get('show').get('imdb_id')+'/" target="_blank">'+scene.get('show_name')+'</a><i>'+scene.get('show').get('releaseYear')+'</i></div><div class="panel-body"><div><img style="float:right;"  src="https://image.tmdb.org/t/p/w45'+scene.get('show').get('poster_path')+'"/><ul id="actor_list'+scene.get('show').get('moviedb_id')+'"></ul></div></div><div class="panel-footer"><button id="load" style="display:none;font-size: 9px;" type="button" data-target=".ds-example-modal-lg"  class="btn btn-group-xs btn-primary">Edit</button> </div></div>';
     }  
@@ -732,23 +766,32 @@ var UserLocationView = Backbone.View.extend({
                             google.maps.event.addListener(marker, 'click', function() {
                               infowindow.open(MAP,marker);
                               google.maps.event.addListener(infowindow,'domready' , function(){
-                                logger('domready');
+                                // logger('domready');
                                 $('#load').on('click', function(e){
                                      
 
+                                    var actor_list_url =  "";
 
+                                        if(scene.get('show_type')=='Television')
+                                        {
+                                            actor_list_url= "http://api.themoviedb.org/3/tv/"+scene.get('tv_show').get('moviedb_id')+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76";
+                                        }
+                                        else
+                                        {
+                                            actor_list_url = "http://api.themoviedb.org/3/movie/"+scene.get('show').get('moviedb_id')+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76";
+                                        }
 
 
                                        if( scene.get('show') && $('#actor_list'+scene.get('show').get('moviedb_id')+' li').length < 5)
-                                                                        {
+                                        {
                                                                           $.ajax({
                                                                                     type: 'GET',
                                                                                      dataType: 'jsonp',
                                                                                      async: false,
-                                                                                    url: "http://api.themoviedb.org/3/movie/"+scene.get('show').get('moviedb_id')+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76", 
+                                                                                    url: actor_list_url, 
                                                                                     contentType: "application/json",
                                                                                     success: function(json) {
-                                                                                        logger(json);
+                                                                                        // logger(json);
                                                                                         var cast = json['cast'];
                                                                                         for(var i = 0 ; cast && i < cast.length; i++)
                                                                                         { 
@@ -760,21 +803,21 @@ var UserLocationView = Backbone.View.extend({
                                                                                         }
                                                                                     },
                                                                                     error: function(e) {
-                                                                                         logger(e.message);
+                                                                                         // logger(e.message);
                                                                                     }
                                                                                   }
                                                                                 );
-                                                                        }
+                                          }
                                           else
                                           {
                                              $.ajax({
                                                                                     type: 'GET',
                                                                                      dataType: 'jsonp',
                                                                                      async: false,
-                                                                                    url: "http://api.themoviedb.org/3/movie/"+scene.get('tv_show').get('moviedb_id')+"/credits?api_key=dc324a52fbf2f454e96fa85c2ad98e76", 
+                                                                                    url: actor_list_url, 
                                                                                     contentType: "application/json",
                                                                                     success: function(json) {
-                                                                                        logger(json);
+                                                                                        // logger(json);
                                                                                         var cast = json['cast'];
                                                                                         for(var i = 0 ; cast && i < cast.length; i++)
                                                                                         { 
@@ -786,7 +829,7 @@ var UserLocationView = Backbone.View.extend({
                                                                                         }
                                                                                     },
                                                                                     error: function(e) {
-                                                                                         logger(e.message);
+                                                                                         // logger(e.message);
                                                                                     }
                                                                                   }
                                                                                 );
@@ -798,7 +841,7 @@ $('#update_modal').on('click', function(){
       /*
       Save the scene!
       */
-    logger('udpate_modal->click');
+    // logger('udpate_modal->click');
      var show_pointer = {
       
                     className:'SNMMovie',
@@ -806,14 +849,14 @@ $('#update_modal').on('click', function(){
                     __type: "Pointer"
                   
      };
-      logger(show_pointer);
+      // logger(show_pointer);
      var quotes_string = $('#quotes_modal').val() ;
      var quotes_;
      if(quotes_string)
      {
         quotes_= quotes_string.split(',');
      }
-     logger(quotes_string);
+     // logger(quotes_string);
      // alert(quotes_string);
      var data_= {
               description: $('#description_modal').val(),
@@ -837,7 +880,7 @@ $('#update_modal').on('click', function(){
                show: show_pointer,
                quotes: quotes_
      }; 
-     logger(data_);
+     // logger(data_);
         var replacer = function(key,val)
             {
                 if(key=='start_hour' || 
@@ -869,15 +912,15 @@ $('#update_modal').on('click', function(){
             data: JSON.stringify(data_,replacer),
             contentType: "application/json",
             success: function(msg){
-              logger(msg);
+              // logger(msg);
               var objectId = $('#objectId_modal').text();
               var movieObjectId = msg['show']['objectId'];
-              logger('object id is '+objectId);
+              // logger('object id is '+objectId);
               // SCENES_.add(msg);
               $('.us-example-modal-lg').modal('show');
               $('#panel_text_updated').text('Successfully updated scene for '+msg['show_type']+' : '+msg['show_name']+'.');
                 var tab_index = $('#tab_index').text();
-                logger('tab index is '+tab_index);
+                // logger('tab index is '+tab_index);
                 var listing_ =  TAB_SIZES['listing.'+tab_index];
                 var markers_ = TAB_SIZES['markers.'+tab_index];
 
@@ -888,18 +931,18 @@ $('#update_modal').on('click', function(){
                       var scene =  listing_.at(i);
                       if(scene.id===$('#objectId_modal').text())
                       {
-                        logger('scene matches '+$('#objectId').text());
+                        // logger('scene matches '+$('#objectId').text());
                         var marker = markers_[i];
                         marker.setMap(null);
                         var new_position = new google.maps.LatLng( parseFloat(msg['latitude']), parseFloat(msg['longitude']) );
                         marker.setPosition(new_position);
                         marker.setMap(MAP);
-                        logger("Removed marker from the map.");
+                        // logger("Removed marker from the map.");
                         break;
                       }
                       else
                       {
-                        logger(scene)
+                        // logger(scene)
                       }
                   } 
 
@@ -915,20 +958,20 @@ $('#update_modal').on('click', function(){
       if(scene.get('tv_show'))
       {
    $('#edit'+scene.get('tv_show').get('moviedb_id')).on('click',function(e){
-                logger('edit called '); logger(e);
+                // logger('edit called '); logger(e);
                
-                logger('callback scene id is '+callback_scene_id);
-                                  logger('edit -- logger id is ');
+                // logger('callback scene id is '+callback_scene_id);
+                                  // logger('edit -- logger id is ');
                                    $('#tab_index').text(current_tab);
                                   $('#objectId_modal').text(scene.id);
-                                  logger('scene id is '+scene.id);
-                                  logger('movie is');  logger(scene.get('show')); logger(scene.get('show').id);  logger(scene.get('show').get('objectId'));
+                                  // logger('scene id is '+scene.id);
+                                  // logger('movie is');  logger(scene.get('tv_show')); logger(scene.get('tv_show').id);  logger(scene.get('tv_show').get('objectId'));
 
-                                  $('#show_id_modal').text(scene.get('show').id);
+                                  $('#show_id_modal').text(scene.get('tv_show').id);
                                   $('#show_name_modal').text(scene.get('show_name'));
                                   $('#show_type_modal').text(scene.get('show_type'));
 
-                                  logger('edit - start_hour=='+scene.get('start_hour') ); logger('edit - start_minute=='+scene.get('start_minute') ); logger('edit - start_second=='+scene.get('start_second')  );  logger('edit - end_hour=='+scene.get('end_hour') ); logger('edit - end_minute=='+scene.get('end_minute')   );  logger('edit - end_second=='+scene.get('end_second')    );
+                                  // logger('edit - start_hour=='+scene.get('start_hour') ); logger('edit - start_minute=='+scene.get('start_minute') ); logger('edit - start_second=='+scene.get('start_second')  );  logger('edit - end_hour=='+scene.get('end_hour') ); logger('edit - end_minute=='+scene.get('end_minute')   );  logger('edit - end_second=='+scene.get('end_second')    );
                                   $('#description_modal').attr('placeholder',scene.get('description')  );
                                    $('#description_modal').text(scene.get('description')  );
                                    $('#description_modal').val(scene.get('description')  );
@@ -949,8 +992,8 @@ $('#update_modal').on('click', function(){
                                   $('#show_modal').attr('placeholder',scene.get('show_name') );
                                     $('#lat_modal').text(parseFloat( scene.get('latitude')  ));
                                    $('#lng_modal').text(parseFloat(  scene.get('longitude')  ));
-                                   logger('scene is ');
-                                   logger(scene);
+                                   // logger('scene is ');
+                                   // logger(scene);
                                     var callback_scene_id = callbackOnClick.call();
                                   
   });
@@ -958,20 +1001,20 @@ $('#update_modal').on('click', function(){
       else
       {
                $('#edit'+scene.get('show').get('moviedb_id')).on('click',function(e){
-                          logger('edit called '); logger(e);
+                          // logger('edit called '); logger(e);
                          
-                          logger('callback scene id is '+callback_scene_id);
-                                            logger('edit -- logger id is ');
+                          // logger('callback scene id is '+callback_scene_id);
+                                            // logger('edit -- logger id is ');
                                              $('#tab_index').text(current_tab);
                                             $('#objectId_modal').text(scene.id);
-                                            logger('scene id is '+scene.id);
-                                            logger('movie is');  logger(scene.get('show')); logger(scene.get('show').id);  logger(scene.get('show').get('objectId'));
+                                            // logger('scene id is '+scene.id);
+                                            // logger('movie is');  logger(scene.get('show')); logger(scene.get('show').id);  logger(scene.get('show').get('objectId'));
 
                                             $('#show_id_modal').text(scene.get('show').id);
                                             $('#show_name_modal').text(scene.get('show_name'));
                                             $('#show_type_modal').text(scene.get('show_type'));
 
-                                            logger('edit - start_hour=='+scene.get('start_hour') ); logger('edit - start_minute=='+scene.get('start_minute') ); logger('edit - start_second=='+scene.get('start_second')  );  logger('edit - end_hour=='+scene.get('end_hour') ); logger('edit - end_minute=='+scene.get('end_minute')   );  logger('edit - end_second=='+scene.get('end_second')    );
+                                            // logger('edit - start_hour=='+scene.get('start_hour') ); logger('edit - start_minute=='+scene.get('start_minute') ); logger('edit - start_second=='+scene.get('start_second')  );  logger('edit - end_hour=='+scene.get('end_hour') ); logger('edit - end_minute=='+scene.get('end_minute')   );  logger('edit - end_second=='+scene.get('end_second')    );
                                             $('#description_modal').attr('placeholder',scene.get('description')  );
                                              $('#description_modal').text(scene.get('description')  );
                                              $('#description_modal').val(scene.get('description')  );
@@ -992,8 +1035,8 @@ $('#update_modal').on('click', function(){
                                             $('#show_modal').attr('placeholder',scene.get('show_name') );
                                               $('#lat_modal').text(parseFloat( scene.get('latitude')  ));
                                              $('#lng_modal').text(parseFloat(  scene.get('longitude')  ));
-                                             logger('scene is ');
-                                             logger(scene);
+                                             // logger('scene is ');
+                                             // logger(scene);
                                               var callback_scene_id = callbackOnClick.call();
                                             
             });      
@@ -1003,10 +1046,10 @@ $('#update_modal').on('click', function(){
 
 
                  $('.es-example-modal-lg').on('show.bs.modal', function(e) {
-                    logger('event is ');
-                    logger(e);
-                                logger('edit scene modal opened');
-                               logger('map modal creating ');
+                    // logger('event is ');
+                    // logger(e);
+                                // logger('edit scene modal opened');
+                               // logger('map modal creating ');
                                 var mapOptions_ = {  zoom: 12 ,  mapTypeId: google.maps.MapTypeId.ROADMAP,   mapTypeControl: true, mapTypeControlOptions: { style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR, position: google.maps.ControlPosition.BOTTOM_CENTER } };
                                  MAP_MODAL = new google.maps.Map(document.getElementById('map-canvas-modal'), mapOptions_) ;
                                  google.maps.event.addListenerOnce(MAP_MODAL, 'idle', function(){
@@ -1020,13 +1063,13 @@ $('#update_modal').on('click', function(){
                                       var marker = new google.maps.Marker({ animation: google.maps.Animation.DROP,  map: MAP_MODAL, zIndex: 1000,   icon:  $('#current-location-img').attr('src')  , title: 'Current Location' , position: initLocation_ });
                                    marker.setMap( MAP_MODAL );
                                    MAP_MODAL.setCenter(initLocation_);
-                                  logger($('#lat_modal').val()); logger($('#lng_modal').val());
+                                  // logger($('#lat_modal').val()); logger($('#lng_modal').val());
                                 var scene_point= new google.maps.LatLng(
                                   parseFloat( $('#lat_modal').text()), 
                                   parseFloat($('#lng_modal').text())
                                 );
-                                logger('scene point is');
-                                logger(scene_point);
+                                // logger('scene point is');
+                                // logger(scene_point);
                                 var infowindow = new google.maps.InfoWindow({   content:  '<div>'+$('#show_name_modal').text()+' original location'+'</div>',  maxWidth: 400,  closeBoxMargin: "12px 4px 2px 2px",  closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif",  infoBoxClearance: new google.maps.Size(1, 1)  });
          
                                  var marker = new google.maps.Marker({ animation: google.maps.Animation.DROP, map: MAP_MODAL, position: scene_point, zIndex: 1000 ,  title:$('#show_name_modal').text()+' original location'   });
@@ -1044,9 +1087,9 @@ $('#update_modal').on('click', function(){
                                     
                                 
    $('#autocomplete').geocomplete({map: '#map-canvas-modal'}).bind('geocode:result',function(event, result){
-                logger('1');
-                                              logger(event);
-                                              logger(result);
+                // logger('1');
+                                              // logger(event);
+                                              // logger(result);
                     var scene_point= new google.maps.LatLng(parseFloat(result['geometry']['location'].lat()), parseFloat(result['geometry']['location'].lng()));
                                   var infowindow = new google.maps.InfoWindow({
                                                                                     content:  '<div style="width:200px;">'+$('#show_name_modal').text()+' new location'+'</div>',
@@ -1096,7 +1139,8 @@ $('#update_modal').on('click', function(){
 
                 if(scene.get('show'))
                 {
-                   $('#delete'+scene.get('show').get('imdb_id')).on('click',function(e){
+                   
+                     $('#delete'+scene.get('show').get('imdb_id')).on('click',function(e){
                                     $('#show_name').text(scene.get('show_name'));
                                     $('#show_type').text(scene.get('show_type'));
                                     $('#address_1').text(scene.get('address_1'));
@@ -1105,25 +1149,25 @@ $('#update_modal').on('click', function(){
                                     $('#city').text(scene.get('city'));
                                     $('#state').text(scene.get('state'));
                                     $('#tab_index').text(current_tab);
-                                    logger(scene);
-                                    logger(scene.id);
+                                    // logger(scene);
+                                    // logger(scene.id);
                                     $('#objectId').text(scene.id); 
                                     $('.ds-example-modal-lg').modal('show');
                                 });
-                }
+                } 
                 else
                 {
                    $('#delete'+scene.get('tv_show').get('imdb_id')).on('click',function(e){
-                                    $('#show_name').text(scene.get('name'));
+                                    $('#show_name').text(scene.get('show_name'));
                                     $('#show_type').text(scene.get('show_type'));
                                     $('#address_1').text(scene.get('address_1'));
                                     $('#releaseYear').text(scene.get('tv_show').get('first_release_date'));
-                                    $('#poster_id').attr('src','https://image.tmdb.org/t/p/w300'+scene.get('tv_show').get('backdrop_path') );
+                                    $('#poster_id').attr('src','https://image.tmdb.org/t/p/w300'+scene.get('tv_show').get('poster_path') );
                                     $('#city').text(scene.get('city'));
                                     $('#state').text(scene.get('state'));
                                     $('#tab_index').text(current_tab);
-                                    logger(scene);
-                                    logger(scene.id);
+                                    // logger(scene);
+                                    // logger(scene.id);
                                     $('#objectId').text(scene.id); 
                                     $('.ds-example-modal-lg').modal('show');
                                 });
@@ -1166,8 +1210,8 @@ $('#update_modal').on('click', function(){
     }
   },
   findAndRenderScenes: function(loc,page_number,current_tab_number, tab_name){
-      logger(TAB_SIZES);
-      logger(CURRENT_TAB);
+      // logger(TAB_SIZES);
+      // logger(CURRENT_TAB);
       var promise =  new Parse.Promise();
       promise.done(this.renderScenes); 
       var promise_tab = new Parse.Promise();
@@ -1181,7 +1225,7 @@ $('#update_modal').on('click', function(){
           page_size: this.PAGE_SIZE,
           page: page_number
       };
-      logger('current_tab_number 1 '+current_tab_number);
+      // logger('current_tab_number 1 '+current_tab_number);
       if( (!current_tab_number) || current_tab_number===0)
       {
         current_tab_number=parseInt($('#current_tab').text());
@@ -1190,7 +1234,7 @@ $('#update_modal').on('click', function(){
       {
         current_tab_number=CURRENT_TAB;
       }
-      logger('current_tab_number 2 '+current_tab_number);
+      // logger('current_tab_number 2 '+current_tab_number);
       Parse.Cloud.run('findClosest', data ).then(function(scenes){  
        
 
@@ -1206,23 +1250,23 @@ $('#update_modal').on('click', function(){
                                      if(tab_name)
                                      {
                                          promise_tab.resolve(current_tab_number,tab_name,loc,count);
-                                          logger(TAB_SIZES);
-                                          logger(CURRENT_TAB);
+                                          // logger(TAB_SIZES);
+                                          // logger(CURRENT_TAB);
                                           return promise_tab;
                                      }
                                    
                                   }) ; 
                       });
-      logger(TAB_SIZES);
-      logger(CURRENT_TAB);
+      // logger(TAB_SIZES);
+      // logger(CURRENT_TAB);
 
   }, 
   renderTab: function(index_,tab_name,loc,page_count)
   {
-     logger(TAB_SIZES);
-      logger(CURRENT_TAB);
-    logger('index_ is '+index_);
-    logger('renderTab,'+index_+','+tab_name+','+TAB_SIZES[index_]+','+page_count);
+     // logger(TAB_SIZES);
+      // logger(CURRENT_TAB);
+    // logger('index_ is '+index_);
+    // logger('renderTab,'+index_+','+tab_name+','+TAB_SIZES[index_]+','+page_count);
         var $newElementHref=$('<a data-toggle="tab" class="map-nav" lat='+loc.lat()+'   lng='+loc.lng()+' id="'+index_+'" href="#">'+tab_name+'  </a>');
 
         var $newElement = $('<li class="active" id="li_'+index_+'"></li>'); 
@@ -1262,19 +1306,19 @@ $('#update_modal').on('click', function(){
                           TAB_SIZES['current.'+idx]=total_number;
                           $('#current_number').text(total_number);
                            $('#total_number').text(total_number);
-                          logger('add class.disabled 2')
+                          // logger('add class.disabled 2')
                           $('#next_li').addClass('disabled');
                         }
                         else if(current_number===total_number)
                         { 
                           $('#current_number').text(total_number);
                           $('#total_number').text(total_number);
-                          logger('add class disabled . 3')
+                          // logger('add class disabled . 3')
                           $('#next_li').addClass('disabled');
                         }
                         else
                         {
-                          logger("REMOVING DISABLED.1");
+                          // logger("REMOVING DISABLED.1");
                           $('#next_li').removeClass('disabled');
                         }
         } })(MAP,loc.lat(),loc.lng(),index_);
@@ -1287,15 +1331,15 @@ $('#update_modal').on('click', function(){
            $('#li_'+index_).addClass('active'); 
            $('#'+index_).click();
              CURRENT_TAB++;
-      logger(TAB_SIZES);
-      logger(CURRENT_TAB);
+      // logger(TAB_SIZES);
+      // logger(CURRENT_TAB);
   },
   renderNewTab: function(loc, tab_name, current_tab, scenes_)
   { 
     if(scenes_)
     {
-        logger(TAB_SIZES);
-        logger(CURRENT_TAB);
+        // logger(TAB_SIZES);
+        // logger(CURRENT_TAB);
         var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
         // var current_tab =  $('#current_tab').text();
         if(current_tab)
@@ -1314,13 +1358,13 @@ $('#update_modal').on('click', function(){
         this.renderCentralLocation(point_latlng,tab_name); 
         this.renderScenes(  scenes_,current_tab ) ;
         this.renderTab( current_tab, tab_name, point_latlng ,scenes_.length );//(current_tab_number,tab_name,loc,count);
-        logger(TAB_SIZES);
-        logger(CURRENT_TAB);  
+        // logger(TAB_SIZES);
+        // logger(CURRENT_TAB);  
     }
     else
     {
-    logger(TAB_SIZES);
-      logger(CURRENT_TAB);
+    // logger(TAB_SIZES);
+      // logger(CURRENT_TAB);
     var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
     // var current_tab =  $('#current_tab').text();
     if(current_tab)
@@ -1337,8 +1381,8 @@ $('#update_modal').on('click', function(){
 
     this.renderCentralLocation(point_latlng,tab_name);
     this.findAndRenderScenes(point_latlng,1,current_tab, tab_name);
-     logger(TAB_SIZES);
-      logger(CURRENT_TAB);       
+     // logger(TAB_SIZES);
+      // logger(CURRENT_TAB);       
     }
    
   
@@ -1461,9 +1505,9 @@ $('.deleteSceneYes').on('click', function(){
     var tab_index = $('#tab_index').text();
     var listing_ =  TAB_SIZES['listing.'+tab_index];
     var markers_ = TAB_SIZES['markers.'+tab_index];
-    logger(tab_index);
-    logger(listing_);
-    logger(markers_);
+    // logger(tab_index);
+    // logger(listing_);
+    // logger(markers_);
        $.ajax({
             type: 'DELETE',
             dataType: 'json',
@@ -1478,7 +1522,7 @@ $('.deleteSceneYes').on('click', function(){
             success: function(msg){
                 $('#panel_text').text('Successfully deleted scene '+$('#show_type').text()+ ' : ' + $('#show_name').text() );
                 $('.ds-success-example-modal-lg').modal('show');
-                logger(TAB_SIZES);
+                // logger(TAB_SIZES);
 
             },
             error: function(error)
@@ -1493,15 +1537,15 @@ $('.deleteSceneYes').on('click', function(){
         var scene =  listing_.at(i);
         if(scene.id===$('#objectId').text())
         {
-          logger('scene matches '+$('#objectId').text());
+          // logger('scene matches '+$('#objectId').text());
           var marker = markers_[i];
           marker.setMap(null);
-          logger("Removed marker from the map.");
+          // logger("Removed marker from the map.");
           break;
         }
         else
         {
-          logger(scene)
+          // logger(scene)
         }
     } 
 
