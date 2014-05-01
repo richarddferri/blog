@@ -264,7 +264,7 @@ var query = (new Parse.Query(Parse.Role));
         // query.equalTo("name", "Administrators");
         query.equalTo("users", user );
         query.first().then(function(adminRole) {
-          console.log(adminRole);
+          // console.log(adminRole);
 
             if (adminRole) {
               if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
@@ -719,9 +719,7 @@ var UserLocationView = Backbone.View.extend({
          {
               if(seasons[i]['air_date'])
              {
-                air_date = new Date(seasons[i]['air_date']);
-                console.log("Air Date Is ");
-                console.log(air_date);
+                air_date = new Date(seasons[i]['air_date']); 
                 if(air_date)
                 {
                    air_date_string = air_date.getFullYear();
@@ -1352,7 +1350,7 @@ $('#update_modal').on('click', function(){
         }
         TAB_SIZES[CURRENT_TAB]=scenes_.length; 
         // current_tab++;
-        console.log('current tab renderNewTab is '+current_tab);
+        // console.log('current tab renderNewTab is '+current_tab);
           $('#current_tab').text((current_tab));
         var point_latlng = new google.maps.LatLng( loc['latitude'], loc['longitude']); 
         this.renderCentralLocation(point_latlng,tab_name); 
@@ -1376,7 +1374,7 @@ $('#update_modal').on('click', function(){
       current_tab=0;
     }
     // current_tab++;
-    console.log('current tab renderNewTab is '+current_tab);
+    // console.log('current tab renderNewTab is '+current_tab);
       $('#current_tab').text((current_tab));
 
     this.renderCentralLocation(point_latlng,tab_name);
@@ -1400,7 +1398,7 @@ $('#next').on('click', function(){
 
       // console.log(current_number+','+current_page+','+lat+','+lng);
       var location =new google.maps.LatLng( parseFloat(lat), parseFloat(lng));
-      console.log('next click - current number is '+current_number+' current page is '+current_page );
+      // console.log('next click - current number is '+current_number+' current page is '+current_page );
       userLocationView.findAndRenderScenes(location, (current_page+1));
   }
   
@@ -1445,6 +1443,7 @@ $( "#namecomplete" ).autocomplete({
                               }
                               else
                               {
+                                logger(movie);
                                 return {
                                           label: ' Television: ' + movie.get('name')+', Release Date: '+movie.get('first_release_date')+' ',
                                           value: movie.get('title') ,
@@ -1458,8 +1457,8 @@ $( "#namecomplete" ).autocomplete({
                 },
                 minLength: 3,
             select: function( event, ui ) {
-              console.log(event);
-              console.log(ui);
+              logger(event);
+              logger(ui);
                 var data = 
                       {
                           query: ui['item']['value']
@@ -1467,11 +1466,11 @@ $( "#namecomplete" ).autocomplete({
               // alert('selected '+ui['item']['value']);
               Parse.Cloud.run('findSceneMovieByName', data).then(function(scenes){
                   
-                  console.log(scenes);
-                  console.log('length is '+scenes.length);
+                  // console.log(scenes);
+                  // console.log('length is '+scenes.length);
                   if(scenes.length > 0)
                   {
-                    console.log(scenes[0]);
+                    // console.log(scenes[0]);
                     userLocationView.renderNewTab(scenes[0].get('location'),ui['item']['value'] ,CURRENT_TAB, scenes);
                   }
                   else
