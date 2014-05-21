@@ -1,4 +1,22 @@
 <% provide( :title, 'Sign Up') %>
+<div class="modal fade bs-signup-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content"> 
+           <div class="modal-header">
+                  <button class="close" data-dismiss="modal">×</button>
+                    <h3 class="panel-title">Scene Near Me Signing Up!</h3> 
+                </div>
+            <div class="modal-body" style="width: 400px;height:450px;margin-left: auto; margin-right: auto;">
+              
+             
+                <p><span id="modal_msg"></span></p>
+            </div> 
+
+        </div>
+      </div>
+  
+    </div> 
 <div class="row vertical-offset-100">
   
  <div class="row vertical-offset-100">
@@ -8,7 +26,7 @@
 			    	<h3 class="panel-title">Sign Up for Scenes Near Me!</h3>
 			 	</div>
 			  	<div class="panel-body">
-			    	<form accept-charset="UTF-8" role="form" id="signup_form">
+          			    	<form accept-charset="UTF-8" role="form" id="signup_form">
 			    			 
                     <fieldset>
                     	<div class="form-group" id="errors2"></div>
@@ -65,8 +83,12 @@ $(document).ready(function()
 {
 Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmapc2uUiorsuUfzg8kvXmYKLM");
  $("#submit").on('click mouseover keyup',function(e){
-
-
+/*
+*
+*/
+  var query_role = (new Parse.Query(Parse.Role));
+    query_role.equalTo("name", "Standard");
+    query_role.first(function(standard_role){
    $("#signup_form").validate({
                     onkeyup: false,
                     onfocusout: false,
@@ -99,7 +121,7 @@ Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmap
                     },
                     messages: {
 
-						"email" : {
+            "email" : {
                             required : "A valid email address is required."
                             
                         },
@@ -124,70 +146,100 @@ Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmap
                     },
                     submitHandler: function(){
    
-                    	var user=new Parse.User();
-                    	// user.set("username", $("#email"))
+                      var user=new Parse.User();
+                      // user.set("username", $("#email"))
                      
-						user.set("username", $("#email").val());
-						user.set("password", $("#password").val());
-						user.set("email", $("#email").val());
-						user.set("first_name", $("#firstName").val());
-						user.set("last_name", $("#lastName").val());
-						user.set("default_location", $("#geocomplete").val());
-						user.set("default_lat", $("#lat").val());
-						user.set("default_lng", $("#lng").val());
-						var location = new Parse.GeoPoint({latitude: parseFloat($("#lat").val()), longitude: parseFloat($("#lng").val())});
-						user.set("location" , location);
-				  $.fancybox({helpers : {
-					        overlay : {
-					            css : {
-					                'background' : 'rgba(58, 42, 45, 0.95)'
-					            }
-					        }
-					    },
-					    closeBtn: false,
-					 	content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Signing up user '+$("#email").val()+'</div></div>'});
+            user.set("username", $("#email").val());
+            user.set("password", $("#password").val());
+            user.set("email", $("#email").val());
+            user.set("first_name", $("#firstName").val());
+            user.set("last_name", $("#lastName").val());
+            user.set("default_location", $("#geocomplete").val());
+            user.set("default_lat", $("#lat").val());
+            user.set("default_lng", $("#lng").val());
+            var location = new Parse.GeoPoint({latitude: parseFloat($("#lat").val()), longitude: parseFloat($("#lng").val())});
+            user.set("location" , location);
+          // $.fancybox({helpers : {
+           //        overlay : {
+           //            css : {
+           //                'background' : 'rgba(58, 42, 45, 0.95)'
+           //            }
+           //        }
+           //    },
+           //    closeBtn: false,
+           //   content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Signing up user '+$("#email").val()+'</div></div>'});
+              $('#modal_msg').text('Prepare to access the best database for TV and Movie Scenes in the world.');  
+              $('.bs-signup-modal-lg').modal('show');
 
-				 
+           
+            user.signUp(null, {
+              success: function(user) {
+                
+  
+          //    $.fancybox({helpers : {
+            //       overlay : {
+            //           css : {
+            //               'background' : 'rgba(58, 42, 45, 0.95)'
+            //           }
+            //       }
+            //   },
+            //   closeBtn: true,
+            // content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Congratulations '+$('#firstName').val()+' '+$('#lastName').val()+'!  You have successfully signed up for Scenes Near Me!</div></div>'});
 
-					 
-						user.signUp(null, {
-						  success: function(user) {
-						    
-	
-   				// 		$.fancybox({helpers : {
-					  //       overlay : {
-					  //           css : {
-					  //               'background' : 'rgba(58, 42, 45, 0.95)'
-					  //           }
-					  //       }
-					  //   },
-					  //   closeBtn: true,
-					 	// content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Congratulations '+$('#firstName').val()+' '+$('#lastName').val()+'!  You have successfully signed up for Scenes Near Me!</div></div>'});
+                 // alert("Redirect to home");
+                  $('#modal_msg').text("Sign Up Successful. Enjoy!");
+                // $(location).attr('href','/user_home');
+        //         window.location.href = '/user_home';
 
-						   
-								$(location).attr('href','/user_home');
+                   Parse.User.logIn(user.get('username'), $('#password').val() , {
+                              success: function(user) {
+                              //   $.fancybox({helpers : {
+                              //       overlay : {
+                              //           css : {
+                              //               'background' : 'rgba(58, 42, 45, 0.95)'
+                              //           }
+                              //       }
+                              //   },
+                              //   closeBtn: true,
+                              // content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">User '+user.get("first_name")+' '+user.get('last_name')+ ' sucessfully signed in' +'</div></div>'});
+                              $('#modal_msg').text("Signing in "+user.get('username'));
+                                 $(location).attr('href','/user_home');
+                                 window.location.href = '/user_home';
+                              },
+                              error: function(user, error) {
+                                 $.fancybox({helpers : {
+                                    overlay : {
+                                        css : {
+                                            'background' : 'rgba(58, 42, 45, 0.95)'
+                                        }
+                                    }
+                                },
+                                closeBtn: true,
+                              content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">User '+error.code+' '+error.message+ ' sucessfully signed in' +'</div></div>'});
+                              }
+                            });
 
 
 
+              },
+              error: function(user, error) {
+                $('#modal_msg').text("Error "+error.code+ " " +error.message );
+                  // alert("Error "+error.code+ " " +error.message );
+                // Show the error message somewhere and let the user try again.
+                // alert("Error: " + error.code + " " + error.message);
+             //    $.fancybox({helpers : {
+            //       overlay : {
+            //           css : {
+            //               'background' : 'rgba(58, 42, 45, 0.95)'
+            //           }
+            //       }
+            //   },
+            //   closeBtn: true,
+            // content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Signing up user '+error.code + " " + error.message+'</div></div>'});
 
-
-						  },
-						  error: function(user, error) {
-						    // Show the error message somewhere and let the user try again.
-						    // alert("Error: " + error.code + " " + error.message);
-						    $.fancybox({helpers : {
-					        overlay : {
-					            css : {
-					                'background' : 'rgba(58, 42, 45, 0.95)'
-					            }
-					        }
-					    },
-					    closeBtn: true,
-					 	content:'<div><div class="panel-heading"><h3 class="panel-title">Scenes Near Me</h3></div><div class="panel-body">Signing up user '+error.code + " " + error.message+'</div></div>'});
-
-						  }
-						}); 
-						e.preventDefault();
+              }
+            }); 
+            e.preventDefault();
                     }
                 });
                 $.validator.addMethod("customFunction", function(value) {
@@ -195,7 +247,10 @@ Parse.initialize("qPOsLuiYC9vZAPcz8yYYPdwY5jjnlO05w7mOusu4", "dwKdYKeoPC3cInAmap
                 }, 'Please enter "input"!'); 
 
                 
- });
+ });     
+    });
+
+ 
    
       function initialize() {
         var mapOptions = {

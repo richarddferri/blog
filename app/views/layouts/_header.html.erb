@@ -40,30 +40,48 @@ if(currentUser)
 				var query = (new Parse.Query(Parse.Role));
 				// query.equalTo("name", "Administrators");
 				query.equalTo("users", Parse.User.current() );
-				query.first().then(function(adminRole) {
+				query.find().then(function(results) {
 					// console.log(adminRole);
+				if(results)
+				{
+					for(var i=0; i < results.length ; i++)
+					{
+						var adminRole=results[i];
+								if (adminRole) 
+								{
+						    	console.log("Current Role is ");
+						    	console.log(adminRole); 
+						    	console.log("Admin Privilege is "+adminRole.get('ACCESS_PRIVELEGE') ); 
+						    	if( (!CURRENT_ROLE) && adminRole)
+						    	{	
+						    			console.log("1-->");
 
-				    if (adminRole) {
-				    	if( (!CURRENT_ROLE) || (CURRENT_ROLE && CURRENT_ROLE['AMDIN_PRIVELEGE'] < adminRole['ADMIN_PRIVELEGE']) )
-				    	{
-				    			CURRENT_ROLE=adminRole;
-				    			$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name") + ' - ' + CURRENT_ROLE.get('name')+" Access" );  
-				    			// console.log('current role is now set in header');
-				    			// console.log(CURRENT_ROLE);
+						    		CURRENT_ROLE=adminRole;
+						    		
+						    	} 		
+						    	else if(  (CURRENT_ROLE && CURRENT_ROLE.get('ACCESS_PRIVELEGE')< adminRole.get('ACCESS_PRIVELEGE') ) )
+						    	{
+						    			console.log("2--->");
+						    			CURRENT_ROLE=adminRole;
+						    			$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name") + ' - ' + CURRENT_ROLE.get('name')+" Access" );  
+						    			// console.log('current role is now set in header');
+						    			// console.log(CURRENT_ROLE);
 
-				    			 if( CURRENT_ROLE.get('name')=='Administrators' )
-								    {
-								    	// console.log('add scene is now enabled.');
-								    	 $('#add_scene').show();
-								   	} 
-				    			// console.log(CURRENT_ROLE);
-				    			// console.log('current role is '+CURRENT_ROLE.get('name'));
-				    	}
-				    
-				        // console.log("***********************user is an admin");
-				    } else {
-				        // console.log("***********************user is not an admin");
-				    }
+						    			 if( CURRENT_ROLE.get('name')=='Administrators' )
+										    {
+										    	// console.log('add scene is now enabled.');
+										    	 $('#add_scene').show();
+										   	} 
+						    			// console.log(CURRENT_ROLE);
+						    			// console.log('current role is '+CURRENT_ROLE.get('name'));
+						    	}
+						    
+						        // console.log("***********************user is an admin");
+						    }  
+					}
+					$('#users_name').text("Welcome "+user.get("first_name")+" " +user.get("last_name") + ' - ' + CURRENT_ROLE.get('name')+" Access" );			
+				}
+		
 				});		
 	} );
 }
